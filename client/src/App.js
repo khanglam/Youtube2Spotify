@@ -1,31 +1,46 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, Component} from 'react';
+import {Button, Alert, Breadcrumb} from 'react-bootstrap';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+
+import Home from './components/pages/Home';
+import About from './components/pages/About';
+import Login from './components/pages/Login';
+import NoMatch from './components/pages/NoMatch';
+
+import Layout from './components/Layout';
+import NavigationBar from './components/NavigationBar';
+import { Register } from './components/pages/Register';
 
 function App() {
 
-  const [data, setData] = useState([{}])
+    const [user, setUser] = useState({name: "", email: ""});
+    const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetch("/members").then(
-      res => res.json()
-    ).then(
-      data => {
-        setData(data)
-        console.log(data)
-      }
-    )
-  }, [])
+    const login = details => {
+      console.log(details);
+    }
 
-  return (
-    <div>
-      {(typeof data.members === 'undefined') ? (
-        <p>Loading...</p>
-      ) : (
-        data.members.map((member, i) => (
-          <p key={i}>{member}</p>
-        ))
-      )}
-    </div>
-  )
+    const logout = () => {
+      console.log("Logout");
+    }
+
+    return (
+      <React.Fragment>
+        {/* <NavigationBar /> */}
+        <Layout>
+          <Router>
+            <Switch>
+              <Route exact path = "/" component= {Home} />
+              <Route path = "/about" component={About} />
+              <Route path = "/login" component={Login} />
+              <Route path = "/register" component={Register} />
+              <Route component = {NoMatch} />
+            </Switch>
+          </Router>
+        </Layout>
+  
+      </React.Fragment>
+    );
 }
 
 export default App
