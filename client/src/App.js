@@ -38,7 +38,6 @@ function App() {
             </Switch>
           </Router>
         </Layout>
-  
       </React.Fragment>
     );
 }

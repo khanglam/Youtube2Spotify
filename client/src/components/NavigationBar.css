@@ -2,15 +2,20 @@
   background-color: #5f788a;
 }
 
-.navbar-brand{
+.navbar-brand {
   color: white !important;
 }
 
-a, .navbar-nav, .nav-link {
+.nav_a,
+.navbar-nav,
+.nav-link {
   color: #cbd5db !important;
   border-color: #cbd5db !important;
 }
 
-a:hover, .navbar-brand:hover, .navbar-nav:hover, .nav-link:hover {
-  color:#ffffff !important;
+.nav_a:hover,
+.navbar-brand:hover,
+.navbar-nav:hover,
+.nav-link:hover {
+  color: #ffffff !important;
 }
