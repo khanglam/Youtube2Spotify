@@ -1,5 +1,6 @@
 import { React, useState } from "react";
 import { useForm } from "react-hook-form";
+import Axios from "../Axios";
 
 function Login() {
   const initialValues = { username: "", password: "" };
@@ -7,16 +8,26 @@ function Login() {
   const [userInfo, setUserInfo] = useState();
   const [formValues, setFormValues] = useState(initialValues);
 
-  const onSubmit = (data) => {
-    // setUserInfo(data); This is for the JSON presentation
-    console.log(data);
-  };
+  const LOGIN_URL = "/login";
+
+  // const onSubmit = (data) => {
+  //   // setUserInfo(data); This is for the JSON presentation
+  //   console.log(data);
+  // };
   // console.log(errors);
+
+  // data is a dictionary containing the values tagged with ref=register.
+  const onSubmit = async (data) => {
+    console.log(data);
+    try {
+      const response = await Axios.post(LOGIN_URL, data);
+    } catch (error) {}
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
-    console.log(formValues);
+    // console.log(formValues);
   };
 
   return (
