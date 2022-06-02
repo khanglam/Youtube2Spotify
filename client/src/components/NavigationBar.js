@@ -1,24 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Nav, Navbar, Container } from "react-bootstrap";
-import styled from "styled-components";
 import "./NavigationBar.css";
-
-// const Styles = styled.div`
-//   .navbar {
-//     background-color: #222;
-//   }
-//   a,
-//   .navbar-brand,
-//   .navbar-nav .nav-link {
-//     color: #bbb;
-//     &:hover {
-//       color: white;
-//     }
-//   }
-//
-// `;
+import Axios from "./Axios";
 
 function NavigationBar() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await Axios.get("/@me");
+        setUser(response.data);
+      } catch (error) {
+        console.log("Not Authenticated");
+      }
+    })();
+  }, []);
+
   return (
     <Navbar expand='md navbar-dark bg-steel'>
       <Container>
@@ -40,16 +38,33 @@ function NavigationBar() {
             </Nav.Item>
           </Nav>
           <Nav className='navbar-nav'>
-            <Nav.Item>
-              <Nav.Link className='nav_a' href='/login'>
-                Login
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link className='nav_a' href='/register'>
-                Register
-              </Nav.Link>
-            </Nav.Item>
+            {user != null ? (
+              <>
+                <Nav.Item>
+                  <Nav.Link className='nav_a' href='/login'>
+                    Logout
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link className='nav_a' href='/About'>
+                    Account
+                  </Nav.Link>
+                </Nav.Item>
+              </>
+            ) : (
+              <>
+                <Nav.Item>
+                  <Nav.Link className='nav_a' href='/login'>
+                    Login
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link className='nav_a' href='/register'>
+                    Register
+                  </Nav.Link>
+                </Nav.Item>
+              </>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -18,7 +18,6 @@ function Login() {
     setIsSubmit(true);
 
     try {
-      // if (Object.keys(formValues).length == 0 && isSubmit) {
       if (Object.keys(errors).length == 0) {
         const response = await Axios.post(LOGIN_URL, formValues);
         window.location.href = "/";
