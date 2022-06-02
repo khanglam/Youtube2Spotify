@@ -76,19 +76,20 @@ def register():
     user_exists = User.query.filter_by(username=username).first() is not None
 
     if current_user.is_authenticated:
+        user = User.query.filter_by(id=current_user.get_id()).first()
         return jsonify({
-            "error": "You're currently logged in. Please logout first to register"
-        })
+            "errorMessage": "You're currently logged in as: "+user.username+". Please logout first to register"
+        }), 409
 
     if user_exists:
-        return jsonify({"error": "User already exists"}), 409
+        return jsonify({"errorMessage": "User already exists"}), 409
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     user = User(username=username, password=hashed_password)  # Creating entry for DB
     db.session.add(user)
     db.session.commit()
 
-    return "Success: Account Successfully Created", user.username
+    return "Success! Account Successfully Created: " + user.username
     
 
 

@@ -1,35 +1,89 @@
-import { React, useState } from "react";
-import { useForm } from "react-hook-form";
-import styled from "styled-components";
-
-const Styles = styled.div`
-  .a {
-    color: #bbb;
-    &:hover {
-      color: white;
-    }
-  }
-`;
+import { React, useState, useEffect, useRef } from "react";
+import Axios from "../Axios";
 
 export const Register = () => {
-  const { register, handleSubmit, errors } = useForm();
-  const [userInfo, setUserInfo] = useState();
+  const initialValues = { username: "", password: "", confirm_password: "" };
+  const [formValues, setFormValues] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
+  const focusUserName = useRef(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [failureMessage, setfailureMessage] = useState("");
 
-  const onSubmit = (data) => {
-    setUserInfo(data);
-    console.log(data);
+  const REGISTER_URL = "/register";
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = validate(formValues);
+    setIsSubmit(true);
+
+    try {
+      if (Object.keys(errors).length == 0) {
+        const response = await Axios.post(REGISTER_URL, formValues);
+        setfailureMessage("");
+        setSuccessMessage(response.data);
+        // window.location.href = "/";
+      }
+    } catch (error) {
+      if (error.response?.status === 409) {
+        setfailureMessage(error.response.data.errorMessage);
+      } else {
+        console.log(error);
+      }
+      focusUserName.current.focus();
+    }
   };
-  console.log(errors);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  useEffect(() => {
+    if (isSubmit) {
+      validate(formValues);
+    }
+  }, [formValues]);
+
+  const validate = (values) => {
+    const errors = {};
+    if (!values.username) {
+      errors.username = "Username is required!";
+    }
+    if (!values.password) {
+      errors.password = "Password is required!";
+    } else if (values.password.length < 4) {
+      errors.password = "Too Short!";
+    } else if (values.password.length > 10) {
+      errors.password = "Too Long!";
+    }
+    if (!values.confirm_password) {
+      errors.confirm_password = "Required Field";
+    } else if (values.confirm_password !== values.password) {
+      errors.confirm_password = "Password does not match";
+    }
+
+    setFormErrors(errors);
+    return errors;
+  };
 
   return (
     <div class='content-section'>
-      <form
-        method='POST'
-        class=''
-        action=''
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-      >
+      <div>
+        {failureMessage ? (
+          <div class='alert alert-danger'>{failureMessage}</div>
+        ) : (
+          <div></div>
+        )}
+      </div>
+      <div>
+        {successMessage != "" ? (
+          <div class='alert alert-success'>{successMessage}</div>
+        ) : (
+          <div></div>
+        )}
+      </div>
+      <form onSubmit={handleSubmit} noValidate>
         <fieldset class='form-group'>
           <legend class='border-bottom mb-4'>Register</legend>
           <div class='form-group'>
@@ -42,11 +96,10 @@ export const Register = () => {
               name='username'
               type='text'
               placeholder='Username'
-              ref={register({ required: "Field is required" })}
+              ref={focusUserName}
+              onChange={handleChange}
             />
-            <div class='invalid-feedback d-block'>
-              {errors.username?.message}
-            </div>
+            <div class='invalid-feedback d-block'>{formErrors.username}</div>
           </div>
           <div class='form-group'>
             <label class='form-control-label' for='password'>
@@ -58,15 +111,9 @@ export const Register = () => {
               name='password'
               placeholder='Password'
               type='password'
-              ref={register({
-                required: "Field is required",
-                minLength: { value: 4, message: "Too Short!" },
-                maxLength: { value: 20, message: "Too Long!" },
-              })}
+              onChange={handleChange}
             ></input>
-            <div class='invalid-feedback d-block'>
-              {errors.password?.message}
-            </div>
+            <div class='invalid-feedback d-block'>{formErrors.password}</div>
           </div>
           <div class='form-group'>
             <label class='form-control-label' for='confirm_password'>
@@ -78,14 +125,10 @@ export const Register = () => {
               name='confirm_password'
               placeholder='Confirm Password'
               type='password'
-              ref={register({
-                required: "Field is required",
-                minLength: { value: 4, message: "Too Short!" },
-                maxLength: { value: 20, message: "Too Long!" },
-              })}
+              onChange={handleChange}
             ></input>
             <div class='invalid-feedback d-block'>
-              {errors.confirm_password?.message}
+              {formErrors.confirm_password}
             </div>
           </div>
         </fieldset>

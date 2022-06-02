@@ -35,31 +35,6 @@ function Login() {
     }
   };
 
-  // useEffect(() => {
-  //   async function loginUser() {
-  //     if (!isMounted) {
-  //       validate(formValues);
-  //       console.log(isSubmit);
-  //       try {
-  //         if (Object.keys(formErrors).length == 0 && isSubmit) {
-  //           const response = await Axios.post(LOGIN_URL, formValues);
-  //           window.location.href = "/";
-  //         }
-  //       } catch (error) {
-  //         if (error.message === "Network Error") {
-  //           setFormErrors({ formErrors, connection: "No Server Response" });
-  //         } else if (error.response?.status === 401) {
-  //           setFormErrors(error.response.data);
-  //         } else {
-  //           setFormErrors({ formErrors, connection: "Login Failed" });
-  //         }
-  //         focusUserName.current.focus();
-  //       }
-  //     }
-  //   }
-  //   loginUser();
-  // }, [isSubmit]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -111,7 +86,7 @@ function Login() {
               name='username'
               type='text'
               placeholder='Username'
-              value={formValues.username}
+              // value={formValues.username}
               ref={focusUserName}
               onChange={handleChange}
             />
@@ -127,7 +102,7 @@ function Login() {
               name='password'
               placeholder='Password'
               type='password'
-              value={formValues.password}
+              // value={formValues.password}
               onChange={handleChange}
             ></input>
             <div class='invalid-feedback d-block'>{formErrors.password}</div>
@@ -182,26 +157,3 @@ function Login() {
 //   });
 // })();
 export default Login;
-
-// <div className='container'>
-//   <Form onSubmit={handleSubmit(onSubmit)}>
-//     <Form.Group controlId='username'>
-//       <Form.Label>Username</Form.Label>
-//       <Form.Control
-//         type='text'
-//         placeholder='Username'
-//         ref={register({ required: "Username is required" })}
-//         isInvalid={!!errors.username}
-//       ></Form.Control>
-//     </Form.Group>
-//     <Form.Group controlId='password'>
-//       <Form.Label>Password</Form.Label>
-//       <Form.Control type='text' placeholder='Password'></Form.Control>
-//     </Form.Group>
-//     <Form.Group controlId='submit'>
-//       <Button type='submit' className='my-2' variant='primary'>
-//         Login
-//       </Button>
-//     </Form.Group>
-//   </Form>
-// </div>
