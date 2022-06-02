@@ -2,7 +2,7 @@ import email
 import json
 from flask import jsonify, render_template, url_for, flash, redirect, request, session
 from server import app, db, bcrypt
-from server.forms import RegistrationForm, LoginForm
+# from server.forms import RegistrationForm, LoginForm
 from server.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 
@@ -44,7 +44,6 @@ def get_current_user():
     user = User.query.filter_by(id=user_id).first()
     return jsonify({
         "id": user.id,
-        "email": user.email,
         "username" : user.username
     })
 
@@ -94,7 +93,7 @@ def register():
 
 
 # @app.route("/login", methods=['GET', 'POST'])
-# def login():
+# def oldLogin():
 #     if current_user.is_authenticated:
 #         return redirect(url_for('home'))
 #     form = LoginForm()
@@ -116,9 +115,9 @@ def login():
 
     user = User.query.filter_by(username=username).first()
     if user is None:
-        return jsonify({"error": "Invalid User"}), 401
+        return jsonify({"username": "Invalid User"}), 401
     if not bcrypt.check_password_hash(user.password, password):
-        return jsonify({"error": "Wrong Password"}), 401
+        return jsonify({"password": "Wrong Password"}), 401
     login_user(user, remember=remember_me)
 
     return jsonify({

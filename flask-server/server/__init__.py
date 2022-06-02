@@ -16,7 +16,4 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info' # Flash message for 'Login to access this page'
 
-with app.app_context():
-    db.create_all()
-
 from server import routes
