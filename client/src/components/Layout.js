@@ -6,9 +6,9 @@ import "../App.css";
 function Layout(props) {
   return (
     <>
-      <header class='site-header'>
+      {/* <header class='site-header'>
         <NavigationBar />
-      </header>
+      </header> */}
       <main role='main'>
         <div class='container'>{props.children}</div>
       </main>

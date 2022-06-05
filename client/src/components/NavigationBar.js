@@ -1,21 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Nav, Navbar, Container } from "react-bootstrap";
 import "./NavigationBar.css";
-import Axios from "./Axios";
+import { UserContext } from "./UserContext";
+// import Axios from "./Axios";
 
 function NavigationBar() {
-  const [user, setUser] = useState(null);
+  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+  console.log(isLoggedIn);
+  // const [user, setUser] = useState(null);
+  // const isLoggedIn = Cookies.get("username") ? Cookies.get("username") : null;
+  // const user = useRef(null);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await Axios.get("/@me");
-        setUser(response.data);
-      } catch (error) {
-        console.log("Not Authenticated");
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const response = await Axios.get("/@me");
+  //       setUser(response.data);
+  //       // user.current = response.data.username;
+  //     } catch (error) {
+  //       if (error.response?.status === 401) {
+  //         console.log("Not Authenticated");
+  //         setUser(null);
+  //         // user.current = null;
+  //       }
+  //     }
+  //   })();
+  //   return user;
+  // }, []);
 
   return (
     <Navbar expand='md navbar-dark bg-steel'>
@@ -38,10 +49,10 @@ function NavigationBar() {
             </Nav.Item>
           </Nav>
           <Nav className='navbar-nav'>
-            {user != null ? (
+            {isLoggedIn.current ? (
               <>
                 <Nav.Item>
-                  <Nav.Link className='nav_a' href='/login'>
+                  <Nav.Link className='nav_a' href='/logout'>
                     Logout
                   </Nav.Link>
                 </Nav.Item>
