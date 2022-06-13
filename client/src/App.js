@@ -6,12 +6,11 @@ import Axios from "./components/Axios";
 import Home from "./components/pages/Home";
 import About from "./components/pages/About";
 import Login from "./components/pages/Login";
-import Logout from "./components/pages/Logout";
+import { logOut } from "./components/pages/Logout";
 import NoMatch from "./components/pages/NoMatch";
 import { Register } from "./components/pages/Register";
 
 import Layout from "./components/Layout";
-import NavigationBar from "./components/NavigationBar";
 import { UserContext } from "./components/UserContext";
 
 function App() {
@@ -21,39 +20,23 @@ function App() {
     [isLoggedIn, setIsLoggedIn]
   );
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await Axios.get("/@me");
-        setIsLoggedIn(true);
-      } catch (error) {
-        if (error.response?.status === 401) {
-          console.log("Not Authenticated");
-          setIsLoggedIn(false);
-        }
-      }
-    })();
-    return isLoggedIn;
-  }, []);
-
   return (
-    <React.Fragment>
+    <>
       <UserContext.Provider value={isLoggedInMemo}>
-        <NavigationBar />
-        <Layout>
-          <Router>
+        <Router>
+          <Layout>
             <Switch>
               <Route exact path='/' component={Home} />
               <Route path='/about' component={About} />
               <Route path='/login' component={Login} />
-              <Route path='/logout' component={Logout} />
+              <Route path='/logout' component={logOut} />
               <Route path='/register' component={Register} />
               <Route component={NoMatch} />
             </Switch>
-          </Router>
-        </Layout>
+          </Layout>
+        </Router>
       </UserContext.Provider>
-    </React.Fragment>
+    </>
   );
 }
 

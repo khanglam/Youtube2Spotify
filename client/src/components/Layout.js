@@ -1,16 +1,15 @@
 import React from "react";
-import { Container } from "react-bootstrap";
 import NavigationBar from "./NavigationBar";
 import "../App.css";
 
 function Layout(props) {
   return (
     <>
-      {/* <header class='site-header'>
+      <header className='site-header'>
         <NavigationBar />
-      </header> */}
+      </header>
       <main role='main'>
-        <div class='container'>{props.children}</div>
+        <div className='container'>{props.children}</div>
       </main>
     </>
   );

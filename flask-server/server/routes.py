@@ -127,10 +127,10 @@ def login():
     })
 
 
-@app.route("/logout")
+@app.route("/logout", methods=['POST'])
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return "200"
 
 @app.route("/account")
 @login_required

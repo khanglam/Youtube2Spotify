@@ -1,14 +1,15 @@
-import { React, useState, useEffect, useRef, useCallback } from "react";
+import { React, useState, useEffect, useRef, useContext } from "react";
 import Axios from "../Axios";
+import { UserContext } from "../UserContext";
 
 function Login() {
   const initialValues = { username: "", password: "", remember_me: false };
-  // const { register, handleSubmit, errors } = useForm();
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const isMounted = useRef(false); // Unused for now
   const focusUserName = useRef(false);
+  const { setIsLoggedIn } = useContext(UserContext);
 
   const LOGIN_URL = "/login";
 
@@ -18,8 +19,9 @@ function Login() {
     setIsSubmit(true);
 
     try {
-      if (Object.keys(errors).length == 0) {
+      if (Object.keys(errors).length === 0) {
         const response = await Axios.post(LOGIN_URL, formValues);
+        setIsLoggedIn(true);
         window.location.href = "/";
       }
     } catch (error) {
@@ -132,27 +134,4 @@ function Login() {
     </div>
   );
 }
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-// (function () {
-//   "use strict";
-
-//   // Fetch all the forms we want to apply custom Bootstrap validation styles to
-//   var forms = document.querySelectorAll(".needs-validation");
-
-//   // Loop over them and prevent submission
-//   Array.prototype.slice.call(forms).forEach(function (form) {
-//     form.addEventListener(
-//       "submit",
-//       function (event) {
-//         if (!form.checkValidity()) {
-//           event.preventDefault();
-//           event.stopPropagation();
-//         }
-
-//         form.classList.add("was-validated");
-//       },
-//       false
-//     );
-//   });
-// })();
 export default Login;
