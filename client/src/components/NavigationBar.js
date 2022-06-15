@@ -15,16 +15,16 @@ function NavigationBar() {
         const response = await Axios.get("/@me");
         setUser(true);
       } catch (error) {
+        setUser(false);
         if (error.response?.status === 401) {
-          console.log("Not Authenticated");
-          setUser(false);
+          console.log("Not Logged In");
         }
       }
     })();
     return function cleanup() {
       // do something when unmount component
     };
-  }, []);
+  }, [user]);
 
   return (
     <>
@@ -37,7 +37,7 @@ function NavigationBar() {
           <Navbar.Collapse id='id_to_toggle'>
             <Nav className='navbar-nav mr-auto'>
               <Nav.Item>
-                <NavLink to='/' className='nav-link'>
+                <NavLink to='/home' className='nav-link'>
                   Home
                 </NavLink>
               </Nav.Item>

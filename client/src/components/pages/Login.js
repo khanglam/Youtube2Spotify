@@ -72,17 +72,17 @@ function Login() {
   };
 
   return (
-    <div class='content-section'>
-      <div class='invalid-feedback d-block'>{formErrors.connection}</div>
+    <div className='content-section'>
+      <div className='invalid-feedback d-block'>{formErrors.connection}</div>
       <form onSubmit={handleSubmit} noValidate>
-        <fieldset class='form-group'>
-          <legend class='border-bottom mb-4'>Log In</legend>
-          <div class='form-group'>
-            <label class='form-label' for='username'>
+        <fieldset className='form-group'>
+          <legend className='border-bottom mb-4'>Log In</legend>
+          <div className='form-group'>
+            <label className='form-label' for='username'>
               Username
             </label>
             <input
-              class='form-control'
+              className='form-control'
               id='username'
               name='username'
               type='text'
@@ -91,14 +91,16 @@ function Login() {
               ref={focusUserName}
               onChange={handleChange}
             />
-            <div class='invalid-feedback d-block'>{formErrors.username}</div>
+            <div className='invalid-feedback d-block'>
+              {formErrors.username}
+            </div>
           </div>
-          <div class='form-group'>
-            <label class='form-control-label' for='password'>
+          <div className='form-group'>
+            <label className='form-control-label' for='password'>
               Password
             </label>
             <input
-              class='form-control'
+              className='form-control'
               id='password'
               name='password'
               placeholder='Password'
@@ -106,24 +108,26 @@ function Login() {
               // value={formValues.password}
               onChange={handleChange}
             ></input>
-            <div class='invalid-feedback d-block'>{formErrors.password}</div>
+            <div className='invalid-feedback d-block'>
+              {formErrors.password}
+            </div>
           </div>
-          <div class='form-check'>
+          <div className='form-check'>
             <input
-              class='form-check-input'
+              className='form-check-input'
               id='remember_me'
               name='remember_me'
               type='checkbox'
               onChange={handleChange}
             ></input>
-            <label class='form-check-label' for='remember_me'>
+            <label className='form-check-label' for='remember_me'>
               Remember Me
             </label>
           </div>
         </fieldset>
-        <div class='form-group'>
+        <div className='form-group'>
           <input
-            class='btn btn-outline-info'
+            className='btn btn-outline-info'
             id='submit'
             name='submit'
             type='submit'

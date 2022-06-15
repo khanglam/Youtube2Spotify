@@ -1,7 +1,9 @@
 header {
   margin-bottom: 1.5rem;
 }
-
+body {
+  background: #ffffff;
+}
 .content-section {
   background: #ffffff;
   padding: 10px 20px;
