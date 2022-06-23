@@ -20,7 +20,7 @@ export const Register = () => {
     try {
       if (Object.keys(errors).length == 0) {
         const response = await Axios.post(REGISTER_URL, formValues);
-        setfailureMessage("");
+        setfailureMessage(""); // Clear the error message
         setSuccessMessage(response.data);
         // window.location.href = "/";
       }

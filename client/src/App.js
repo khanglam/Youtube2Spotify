@@ -26,7 +26,6 @@ function App() {
         <Router>
           <Switch>
             <Route exact path='/' component={WelcomePage} />
-
             <Layout>
               <Switch>
                 <Route path='/home' component={Home} />

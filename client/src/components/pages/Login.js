@@ -1,6 +1,7 @@
 import { React, useState, useEffect, useRef, useContext } from "react";
 import Axios from "../Axios";
 import { UserContext } from "../UserContext";
+import { NavLink } from "react-router-dom";
 
 function Login() {
   const initialValues = { username: "", password: "", remember_me: false };
@@ -22,7 +23,7 @@ function Login() {
       if (Object.keys(errors).length === 0) {
         const response = await Axios.post(LOGIN_URL, formValues);
         setIsLoggedIn(true);
-        window.location.href = "/";
+        window.location.href = "/home";
       }
     } catch (error) {
       if (error.message === "Network Error") {
@@ -133,6 +134,14 @@ function Login() {
             type='submit'
             value='Login'
           ></input>
+        </div>
+        <div class='border-top pt-3'>
+          <small class='text-muted'>
+            Need An Account?
+            <NavLink to='/register' className='ml-2'>
+              Sign Up Now
+            </NavLink>
+          </small>
         </div>
       </form>
     </div>

@@ -1,3 +1,22 @@
+.container-fluid {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100% !important;
+  height: 100%;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  width: 30%;
+  z-index: 9999;
+}
+
 section {
   display: flex !important;
   position: relative !important;
