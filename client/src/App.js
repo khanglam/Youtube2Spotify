@@ -25,19 +25,23 @@ function App() {
       <UserContext.Provider value={isLoggedInMemo}>
         <Router>
           <Switch>
-            <WelcomePage>
-              <Route exact path='/' component={Login} />
-              <Route path='/login' component={Login} />
-              <Route path='/register' component={Register} />
-            </WelcomePage>
-            <Layout>
-              <Switch>
-                <Route path='/home' component={Home} />
-                <Route path='/about' component={About} />
-                <Route path='/logout' component={logOut} />
-                <Route component={NoMatch} />
-              </Switch>
-            </Layout>
+            <Route path={["/home", "/about", "/logout"]}>
+              <Layout>
+                <Switch>
+                  <Route path="/home" component={Home} />
+                  <Route path="/about" component={About} />
+                  <Route path="/logout" component={logOut} />
+                  <Route component={NoMatch} />
+                </Switch>
+              </Layout>
+            </Route>
+            <Route path={["/login", "/register", "/"]}>
+              <WelcomePage>
+                <Route exact path="/" component={Login} />
+                <Route path="/login" component={Login} />
+                <Route path="/register" component={Register} />
+              </WelcomePage>
+            </Route>
           </Switch>
         </Router>
       </UserContext.Provider>

@@ -1,5 +1,6 @@
 import { React, useState, useEffect, useRef } from "react";
 import Axios from "../Axios";
+import { NavLink } from "react-router-dom";
 
 export const Register = () => {
   const initialValues = { username: "", password: "", confirm_password: "" };
@@ -68,85 +69,85 @@ export const Register = () => {
   };
 
   return (
-    <div class='content-section'>
+    <div class="content-section">
       <div>
         {failureMessage ? (
-          <div class='alert alert-danger'>{failureMessage}</div>
+          <div class="alert alert-danger">{failureMessage}</div>
         ) : (
           <div></div>
         )}
       </div>
       <div>
         {successMessage != "" ? (
-          <div class='alert alert-success'>{successMessage}</div>
+          <div class="alert alert-success">{successMessage}</div>
         ) : (
           <div></div>
         )}
       </div>
       <form onSubmit={handleSubmit} noValidate>
-        <fieldset class='form-group'>
-          <legend class='border-bottom mb-4'>Register</legend>
-          <div class='form-group'>
-            <label class='form-label' for='username'>
+        <fieldset class="form-group">
+          <legend class="border-bottom mb-4">Register</legend>
+          <div class="form-group">
+            <label class="form-label" for="username">
               Username
             </label>
             <input
-              class='form-control'
-              id='username'
-              name='username'
-              type='text'
-              placeholder='Username'
+              class="form-control"
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Username"
               ref={focusUserName}
               onChange={handleChange}
             />
-            <div class='invalid-feedback d-block'>{formErrors.username}</div>
+            <div class="invalid-feedback d-block">{formErrors.username}</div>
           </div>
-          <div class='form-group'>
-            <label class='form-control-label' for='password'>
+          <div class="form-group">
+            <label class="form-control-label" for="password">
               Password
             </label>
             <input
-              class='form-control'
-              id='password'
-              name='password'
-              placeholder='Password'
-              type='password'
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Password"
+              type="password"
               onChange={handleChange}
             ></input>
-            <div class='invalid-feedback d-block'>{formErrors.password}</div>
+            <div class="invalid-feedback d-block">{formErrors.password}</div>
           </div>
-          <div class='form-group'>
-            <label class='form-control-label' for='confirm_password'>
+          <div class="form-group">
+            <label class="form-control-label" for="confirm_password">
               Confirm Password
             </label>
             <input
-              class='form-control'
-              id='confirm_password'
-              name='confirm_password'
-              placeholder='Confirm Password'
-              type='password'
+              class="form-control"
+              id="confirm_password"
+              name="confirm_password"
+              placeholder="Confirm Password"
+              type="password"
               onChange={handleChange}
             ></input>
-            <div class='invalid-feedback d-block'>
+            <div class="invalid-feedback d-block">
               {formErrors.confirm_password}
             </div>
           </div>
         </fieldset>
-        <div class='form-group'>
+        <div class="form-group">
           <input
-            class='btn btn-outline-info'
-            name='sign_up'
-            type='submit'
-            value='Sign Up'
+            class="btn btn-outline-info"
+            name="sign_up"
+            type="submit"
+            value="Sign Up"
           ></input>
         </div>
       </form>
-      <div class='border-top pt-3'>
-        <small class='text-muted'>
+      <div class="border-top pt-3">
+        <small class="text-muted">
           Already Have An Account?{" "}
-          <a class='ml-2' href='/login'>
+          <NavLink to="/login" className="ml-2">
             Sign In
-          </a>
+          </NavLink>
         </small>
       </div>
     </div>
