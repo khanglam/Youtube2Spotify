@@ -25,14 +25,16 @@ function App() {
       <UserContext.Provider value={isLoggedInMemo}>
         <Router>
           <Switch>
-            <Route exact path='/' component={WelcomePage} />
+            <WelcomePage>
+              <Route exact path='/' component={Login} />
+              <Route path='/login' component={Login} />
+              <Route path='/register' component={Register} />
+            </WelcomePage>
             <Layout>
               <Switch>
                 <Route path='/home' component={Home} />
                 <Route path='/about' component={About} />
-                <Route path='/login' component={Login} />
                 <Route path='/logout' component={logOut} />
-                <Route path='/register' component={Register} />
                 <Route component={NoMatch} />
               </Switch>
             </Layout>

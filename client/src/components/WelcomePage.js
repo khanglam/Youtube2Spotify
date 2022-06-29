@@ -1,5 +1,7 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from "./pages/Login";
+import { Register } from "./pages/Register";
 import "./WelcomePage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -27,12 +29,10 @@ import {
   faCommenting,
 } from "@fortawesome/free-solid-svg-icons";
 
-function WelcomePage() {
+function WelcomePage(props) {
   return (
     <>
-      <div className='container-fluid'>
-        <Login />
-      </div>
+      <div className='container-fluid'>{props.children}</div>
       <section>
         <div class='row'>
           <div class='icons'>
