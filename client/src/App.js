@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Home from "./components/pages/Home";
@@ -7,40 +7,74 @@ import Login from "./components/pages/Login";
 import { logOut } from "./components/pages/Logout";
 import NoMatch from "./components/pages/NoMatch";
 import { Register } from "./components/pages/Register";
+import Spotify from "./components/pages/spotify/Spotify";
 
 import WelcomePage from "./components/WelcomePage";
 import Layout from "./components/Layout";
+import Axios from "./components/Axios";
 
 import { UserContext } from "./components/UserContext";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Unused
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isLoggedInMemo = useMemo(
     () => ({ isLoggedIn, setIsLoggedIn }),
     [isLoggedIn, setIsLoggedIn]
   );
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await Axios.get("/@me");
+        setIsLoggedIn(true);
+      } catch (error) {
+        if (error.response?.status === 401) {
+          console.log("Not Authenticated");
+          setIsLoggedIn(false);
+        }
+      }
+    })();
+    return function cleanup() {
+      // do something when unmount component
+    };
+  }, []);
 
   return (
     <>
       <UserContext.Provider value={isLoggedInMemo}>
         <Router>
           <Switch>
-            <Route path={["/home", "/about", "/logout"]}>
+            <Route path={["/home", "/about", "spotify", "/logout"]}>
               <Layout>
                 <Switch>
-                  <Route path="/home" component={Home} />
-                  <Route path="/about" component={About} />
-                  <Route path="/logout" component={logOut} />
-                  <Route component={NoMatch} />
+                  <Route path='/home' component={Home} />
+                  <Route path='/about' component={About} />
+                  <Route path='/spotify' component={Spotify} />
+                  <Route path='/logout' component={logOut} />
                 </Switch>
               </Layout>
             </Route>
             <Route path={["/login", "/register", "/"]}>
-              <WelcomePage>
-                <Route exact path="/" component={Login} />
-                <Route path="/login" component={Login} />
-                <Route path="/register" component={Register} />
-              </WelcomePage>
+              {isLoggedIn ? (
+                <Layout>
+                  <Switch>
+                    <Route exact path='/' component={Home} />
+                    <Route path='/about' component={About} />
+                    <Route path='/spotify' component={Spotify} />
+                    <Route path='/logout' component={logOut} />
+                    <Route component={NoMatch} />
+                  </Switch>
+                </Layout>
+              ) : (
+                <WelcomePage>
+                  <Switch>
+                    <Route exact path='/' component={Login} />
+                    <Route path='/login' component={Login} />
+                    <Route path='/register' component={Register} />
+                    <Route component={Login} />
+                  </Switch>
+                </WelcomePage>
+              )}
             </Route>
           </Switch>
         </Router>

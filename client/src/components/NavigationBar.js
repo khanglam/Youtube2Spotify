@@ -3,36 +3,17 @@ import { Nav, Navbar, Container } from "react-bootstrap";
 import "./NavigationBar.css";
 import { UserContext } from "./UserContext";
 import { NavLink } from "react-router-dom";
-import Axios from "./Axios";
 
 function NavigationBar() {
   const { isLoggedIn } = useContext(UserContext); // Unused
-  const [user, setUser] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await Axios.get("/@me");
-        setUser(true);
-      } catch (error) {
-        setUser(false);
-        if (error.response?.status === 401) {
-          console.log("Not Logged In");
-        }
-      }
-    })();
-    return function cleanup() {
-      // do something when unmount component
-    };
-  }, [user]);
 
   return (
     <>
       <Navbar expand='md navbar-dark bg-steel'>
         <Container>
-          <Navbar.Brand className='navbar-brand mr-4' href='/'>
+          <NavLink to='/' className='navbar-brand mr-4'>
             Youtube2Spotify
-          </Navbar.Brand>
+          </NavLink>
           <Navbar.Toggle aria-controls='id_to_toggle' />
           <Navbar.Collapse id='id_to_toggle'>
             <Nav className='navbar-nav mr-auto'>
@@ -48,16 +29,21 @@ function NavigationBar() {
               </Nav.Item>
             </Nav>
             <Nav className='navbar-nav'>
-              {user ? (
+              {isLoggedIn ? (
                 <>
-                  <Nav.Item>
-                    <NavLink to='/logout' className='nav-link'>
-                      Logout
-                    </NavLink>
-                  </Nav.Item>
                   <Nav.Item>
                     <NavLink to='/About' className='nav-link'>
                       Account
+                    </NavLink>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <NavLink to='/Spotify' className='nav-link'>
+                      Spotify
+                    </NavLink>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <NavLink to='/logout' className='nav-link'>
+                      Logout
                     </NavLink>
                   </Nav.Item>
                 </>

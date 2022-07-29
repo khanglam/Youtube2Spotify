@@ -1,11 +1,17 @@
-import email
+# from crypt import methods
+from lib2to3.pgen2 import token
+from flask_cors import CORS, cross_origin
 import json
+import os
 from flask import jsonify, render_template, url_for, flash, redirect, request, session
 from server import app, db, bcrypt
 from server.forms import RegistrationForm, LoginForm
 from server.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
-
+import base64
+# import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+import time
 
 posts = [
     {
@@ -136,3 +142,44 @@ def logout():
 @login_required
 def account():
     return render_template('account.html', title='Account')
+
+# Spotify configuration
+CLIENT_ID = os.environ["CLIENT_ID"]
+CLIENT_SECRET = os.environ["CLIENT_SECRET"]
+
+# Initial Spotify Login Authentication.
+TOKEN_INFO = "token_info"
+@app.route("/loginSpotify", methods=['GET'])
+def loginSpotify():
+    sp_oauth = create_spotify_oauth()
+    auth_url = sp_oauth.get_authorize_url()
+    # session.clear()
+    code = request.args.get("code")
+    token_info = sp_oauth.get_access_token(code)
+    session[TOKEN_INFO] = token_info
+    return token_info
+
+# Function to check if token has expired and refresh if needed.
+# This function gets called to get token.
+@app.route("/refreshSpotifyToken", methods=['GET'])
+def get_token():
+    token_info = session.get(TOKEN_INFO, None)
+    if not token_info:
+        return loginSpotify()
+        
+    # If token exists, refresh the token
+    sp_oauth = create_spotify_oauth()
+    token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+    session[TOKEN_INFO] = token_info
+    return token_info
+
+
+# Create Spotify OAuth Object
+def create_spotify_oauth():
+    return SpotifyOAuth(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        redirect_uri='http://localhost:3000/Spotify',
+        # scope="user-library-read streaming user-read-email user-read-private user-library-modify user-read-playback-state user-modify-playback-state"
+        scope="user-library-read streaming"
+    )
