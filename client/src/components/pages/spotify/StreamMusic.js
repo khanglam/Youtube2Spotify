@@ -1,7 +1,7 @@
 import { React, useState, useEffect, useContext } from "react";
 import { Container, Form } from "react-bootstrap";
 import SpotifyWebApi from "spotify-web-api-node";
-import useAuth from "./useAuth";
+import Axios from "../../Axios";
 import { TokenInfo } from "./TokenInfo";
 import TrackSearchResult from "./TrackSearchResult";
 import Player from "./Player";
@@ -16,17 +16,38 @@ function StreamMusic() {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
+  const [lyrics, setLyrics] = useState("");
 
   function chooseTrack(track) {
     setPlayingTrack(track);
     setSearch("");
+    setLyrics("");
   }
+
+  // Fetch Lyrics
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!playingTrack) return;
+        const response = await Axios.get("spotifyLyrics", {
+          params: {
+            track: playingTrack.title,
+            artist: playingTrack.artist
+          }
+        });
+        setLyrics(response.data.lyrics);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [playingTrack]);
 
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
   }, [accessToken]);
 
+  // Update Search Results
   useEffect(() => {
     if (!search) return setSearchResults([]);
     if (!accessToken) return;
@@ -55,7 +76,7 @@ function StreamMusic() {
             artist: track.artists[0].name,
             title: track.name,
             uri: track.uri,
-            albumUrl: smallestAlbumImage.url,
+            albumUrl: smallestAlbumImage.url
           };
         })
       );
@@ -82,6 +103,18 @@ function StreamMusic() {
             chooseTrack={chooseTrack}
           />
         ))}
+        {searchResults.length === 0 && (
+          <div
+            className='text-center'
+            style={{
+              whiteSpace: "pre",
+              fontFamily: "Comic Sans",
+              fontSize: "25px"
+            }}
+          >
+            {lyrics}
+          </div>
+        )}
       </div>
       <div>
         <Player accessToken={accessToken} trackUri={playingTrack?.uri} />

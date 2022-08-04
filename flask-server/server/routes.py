@@ -9,9 +9,8 @@ from server.forms import RegistrationForm, LoginForm
 from server.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 import base64
-# import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-import time
+import lyricsgenius as lg
 
 posts = [
     {
@@ -146,6 +145,7 @@ def account():
 # Spotify configuration
 CLIENT_ID = os.environ["CLIENT_ID"]
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]
+GENIUS_ACCESS_TOKEN = os.environ["GENIUS_ACCESS_TOKEN"]
 
 # Initial Spotify Login Authentication.
 TOKEN_INFO = "token_info"
@@ -173,6 +173,17 @@ def get_token():
     session[TOKEN_INFO] = token_info
     return token_info
 
+@app.route("/spotifyLyrics", methods=['GET'])
+def get_spotify_lyrics():
+    track = request.args.get("track")
+    artist = request.args.get("artist")
+
+    genius = lg.Genius(GENIUS_ACCESS_TOKEN)
+    song = genius.search_song(title=track, artist=artist)
+    lyrics = song.lyrics
+    return jsonify({
+        "lyrics": lyrics
+    })
 
 # Create Spotify OAuth Object
 def create_spotify_oauth():
