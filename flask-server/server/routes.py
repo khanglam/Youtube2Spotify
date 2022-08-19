@@ -12,6 +12,11 @@ import base64
 from spotipy.oauth2 import SpotifyOAuth
 import lyricsgenius as lg
 
+# Youtube API Libraries
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+
 posts = [
     {
         'author': 'Khang Lam',
@@ -194,3 +199,20 @@ def create_spotify_oauth():
         # scope="user-library-read streaming user-read-email user-read-private user-library-modify user-read-playback-state user-modify-playback-state"
         scope="user-library-read streaming"
     )
+
+# Youtube Configurations
+api_service_name = "youtube"
+api_version = "v3"
+client_secrets_file = "yt_client_secrets.json"
+scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
+
+# Get credentials and create an API client
+flow = InstalledAppFlow.from_client_secrets_file(
+    client_secrets_file, scopes)
+credentials = flow.run_console()
+youtube = googleapiclient.discovery.build(
+    api_service_name, api_version, credentials=credentials)
+
+flow = InstalledAppFlow.from_client_secrets_file(
+    'yt_client_secrets.json',
+)
