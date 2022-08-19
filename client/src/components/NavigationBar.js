@@ -42,6 +42,11 @@ function NavigationBar() {
                     </NavLink>
                   </Nav.Item>
                   <Nav.Item>
+                    <NavLink to='/Youtube' className='nav-link'>
+                      YouTube
+                    </NavLink>
+                  </Nav.Item>
+                  <Nav.Item>
                     <NavLink to='/logout' className='nav-link'>
                       Logout
                     </NavLink>

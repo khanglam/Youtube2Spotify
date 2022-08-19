@@ -8,6 +8,7 @@ import { logOut } from "./components/pages/Logout";
 import NoMatch from "./components/pages/NoMatch";
 import { Register } from "./components/pages/Register";
 import Spotify from "./components/pages/spotify/Spotify";
+import Youtube from "./components/pages/youtube/Youtube";
 
 import WelcomePage from "./components/WelcomePage";
 import Layout from "./components/Layout";
@@ -44,12 +45,13 @@ function App() {
       <UserContext.Provider value={isLoggedInMemo}>
         <Router>
           <Switch>
-            <Route path={["/home", "/about", "spotify", "/logout"]}>
+            <Route path={["/home", "/about", "spotify", "/youtube", "/logout"]}>
               <Layout>
                 <Switch>
                   <Route path='/home' component={Home} />
                   <Route path='/about' component={About} />
                   <Route path='/spotify' component={Spotify} />
+                  <Route path='/youtube' component={Youtube} />
                   <Route path='/logout' component={logOut} />
                 </Switch>
               </Layout>

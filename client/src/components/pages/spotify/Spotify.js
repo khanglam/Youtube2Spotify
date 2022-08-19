@@ -1,7 +1,6 @@
 import { React, useState, useEffect } from "react";
 
 import { Container } from "react-bootstrap";
-import useAuth from "./useAuth";
 import Axios from "../../Axios";
 import StreamMusic from "./StreamMusic";
 import { TokenInfo } from "./TokenInfo";
@@ -10,7 +9,6 @@ const LOGIN_URL = "/loginSpotify";
 const REFRESH_TOKEN_URL = "/refreshSpotifyToken";
 
 function Spotify() {
-  const [authUrl, setAuthURL] = useState(null);
   const [tokenInfo, setTokenInfo] = useState();
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
@@ -49,12 +47,12 @@ function Spotify() {
           console.log(error);
         }
       })();
-    }, (expiresIn - 60) * 1000);
+    }, (expiresIn - 60) * 1000); // Refresh every 60 seconds
 
     return function cleanup() {
       clearTimeout(timeout);
     };
-  }, [accessToken]);
+  }, [accessToken, refreshToken, expiresIn]);
 
   return (
     <>
@@ -74,7 +72,7 @@ function Spotify() {
                     maxHeight: "38px",
                     justifyContent: "center",
                     alignItems: "center",
-                    textAlign: "center",
+                    textAlign: "center"
                   }}
                   onClick={() => {
                     setStreamMusic(false);
@@ -98,7 +96,7 @@ function Spotify() {
         <Container
           className='d-flex justify-content-center align-items-center'
           style={{
-            minHeight: "90vh",
+            minHeight: "90vh"
           }}
         >
           <input
