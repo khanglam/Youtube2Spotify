@@ -13,36 +13,11 @@ from spotipy.oauth2 import SpotifyOAuth
 import lyricsgenius as lg
 
 # Youtube API Libraries
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
-
-posts = [
-    {
-        'author': 'Khang Lam',
-        'title': 'Blog 1',
-        'content': 'Ty for Flask',
-        'date_posted': 'May 15, 2022'
-    },
-    {
-        'author': 'Gary Liang',
-        'title': 'Blog 2',
-        'content': 'Ty for React',
-        'date_posted': 'May 16, 2022'
-    },
-    {
-        'author': 'Ethan Lopez',
-        'title': 'Blog 3',
-        'content': 'Neural Network OP',
-        'date_posted': 'May 17, 2022'
-    }
-]
-
-
-@app.route("/")
-@app.route("/home")
-def home():
-    return render_template('home.html', posts=posts)
 
 @app.route("/@me")
 def get_current_user():
@@ -200,19 +175,18 @@ def create_spotify_oauth():
         scope="user-library-read streaming"
     )
 
-# Youtube Configurations
+# Youtube Configurations (Copied from YouTube)
 api_service_name = "youtube"
 api_version = "v3"
 client_secrets_file = "yt_client_secrets.json"
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 # Get credentials and create an API client
-flow = InstalledAppFlow.from_client_secrets_file(
-    client_secrets_file, scopes)
-credentials = flow.run_console()
-youtube = googleapiclient.discovery.build(
-    api_service_name, api_version, credentials=credentials)
-
-flow = InstalledAppFlow.from_client_secrets_file(
-    'yt_client_secrets.json',
-)
+@app.route("/loginYoutube", methods=["GET", "POST"])
+def get_youtube_client():
+    flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file, scopes)
+    #credentials = flow.run_console() - Deprecated and is no longer supported. Check out https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html?m=1#disallowed-oob
+    flow.run_local_server(port=3000, prompt="consent") #prompt = consent is for refresh token solution.
+    credentials = flow.credentials
+    youtube_client = build(api_service_name, api_version, credentials=credentials)
+    return youtube_client
