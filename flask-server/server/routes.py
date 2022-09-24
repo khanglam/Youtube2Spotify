@@ -13,8 +13,7 @@ from spotipy.oauth2 import SpotifyOAuth
 import lyricsgenius as lg
 
 # Youtube API Libraries
-import google.oauth2.credentials
-import google_auth_oauthlib.flow
+import pickle #library to store/load bytes file
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
@@ -93,7 +92,7 @@ def oldLogin():
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
-@app.route("/login", methods=['GET', 'POST'])
+@app.route("/login", methods=['POST'])
 def login():
     username = request.json["username"]
     password = request.json["password"]
@@ -182,11 +181,50 @@ client_secrets_file = "yt_client_secrets.json"
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 # Get credentials and create an API client
-@app.route("/loginYoutube", methods=["GET", "POST"])
+@app.route("/loginYoutube", methods=['GET'])
 def get_youtube_client():
-    flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file, scopes)
-    #credentials = flow.run_console() - Deprecated and is no longer supported. Check out https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html?m=1#disallowed-oob
-    flow.run_local_server(port=3000, prompt="consent") #prompt = consent is for refresh token solution.
-    credentials = flow.credentials
+    credentials = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token: # rb - read bytes
+            credentials = pickle.load(token)
+     # If there are no valid credentials available, then either refresh the token or log in.
+    if not credentials or not credentials.valid:
+        if credentials and credentials.expired and credentials.refresh_token:
+            print('Refreshing Access Token...')
+            credentials.refresh(Request())
+        else:
+            print('Fetching New Tokens...')
+            flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file,scopes)
+            flow.run_local_server(port=3000, prompt='consent', authorization_prompt_message='') #prompt=consent is the fix for refresh token solution.
+            # flow.run_console() #- Deprecated and is no longer supported. Check out https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html?m=1#disallowed-oob
+            credentials = flow.credentials
+
+            # Save the credentials for the next run - wb = write byte
+            with open('token.pickle', 'wb') as f:
+                print('Saving Credentials for Future Use...')
+                pickle.dump(credentials, f)
     youtube_client = build(api_service_name, api_version, credentials=credentials)
     return youtube_client
+
+@app.route("/getYtPlaylist", methods=['GET', 'POST'])
+def get_yt_playlist():
+    youtube_client = get_youtube_client()
+    request = youtube_client.playlists().list(
+        part="contentDetails,snippet,id",
+        maxResults=25,
+        mine=True
+    )
+    response = request.execute()
+    return response
+
+@app.route("/getYtChannel", methods=['GET'])
+def get_yt_channelInfo():
+    youtube_client = get_youtube_client()
+    request = youtube_client.channels().list(
+        part="snippet,contentDetails,statistics",
+        mine=True
+    )
+    response = request.execute()
+    channel_name = response["items"][0]["snippet"]["title"]
+
+    return channel_name

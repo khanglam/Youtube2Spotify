@@ -10,6 +10,7 @@ app.config.from_object(ApplicationConfig) # Get config from config.py file
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True)
+# CORS(app, supports_credentials=True, resources={r"*": {"origins": "*"}}) # Allow Cross Origin
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info' # Flash message for 'Login to access this page'

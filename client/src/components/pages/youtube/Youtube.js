@@ -1,42 +1,72 @@
 import { React, useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
-import Axios from "../../Axios";
+import { AxiosYT } from "../../Axios";
+import TransferPlaylist from "./TransferPlaylist";
 
-import { TokenInfo } from "./TokenInfo";
+import { UserChannelInfo } from "./UserChannel";
 
-const LOGIN_URL = "/loginYoutube";
+const LOGIN_URL = "/getYtChannel";
 
 function Youtube() {
   const [tokenInfo, setTokenInfo] = useState();
-  const [accessToken, setAccessToken] = useState(null);
+  const [userChannel, setUserChannel] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
   const [expiresIn, setExpiresIn] = useState(null);
 
   // To toggle which option to render
   const [streamMusic, setStreamMusic] = useState(false);
+  const [transferPlaylist, setTransferPlaylist] = useState(false);
+  const [optionSelected, setOptionSelected] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await Axios.get(LOGIN_URL);
-      setTokenInfo(response.data);
-      setAccessToken(response.data["access_token"]);
-      setRefreshToken(response.data["refresh_token"]);
-      setExpiresIn(response.data["expires_in"]);
+      const response = await AxiosYT.get(LOGIN_URL);
+      setUserChannel(response.data);
+      // setRefreshToken(response.data["refresh_token"]);
+      // setExpiresIn(response.data["expires_in"]);
     } catch (error) {
       console.log(error);
-      window.location = "/Youtube";
+      // window.location = "/Youtube";
     }
   };
+
   return (
     <>
-      {tokenInfo ? (
+      {/* If authenticated */}
+      {userChannel ? (
         <Container
-          className='d-flex justify-content-center align-items-center'
-          style={{ minHeight: "90vh" }}
+          style={{
+            minHeight: "90vh",
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            flexDirection: "column"
+          }}
         >
-          {streamMusic ? (
-            <TokenInfo.Provider value={tokenInfo}>
+          {!streamMusic && !transferPlaylist && (
+            <>
+              <input
+                value='Stream Music'
+                type='button'
+                className='btn btn-danger btn-lg'
+                onClick={() => {
+                  setStreamMusic(true);
+                }}
+              ></input>
+              <input
+                value='Transfer Playlist'
+                type='button'
+                className='btn btn-danger btn-lg'
+                onClick={() => {
+                  setTransferPlaylist(true);
+                }}
+              ></input>
+            </>
+          )}
+
+          {streamMusic && (
+            <UserChannelInfo.Provider value={userChannel}>
               <Container className='d-flex justify-content-center'>
                 <input
                   type='button'
@@ -53,16 +83,28 @@ function Youtube() {
                   }}
                 ></input>
               </Container>
-            </TokenInfo.Provider>
-          ) : (
-            <input
-              value='Stream Music'
-              type='button'
-              className='btn btn-danger btn-lg'
-              onClick={() => {
-                setStreamMusic(true);
-              }}
-            ></input>
+            </UserChannelInfo.Provider>
+          )}
+          {transferPlaylist && (
+            <UserChannelInfo.Provider value={userChannel}>
+              <Container className='d-flex justify-content-center'>
+                <input
+                  type='button'
+                  className='btn btn-danger'
+                  value='Back'
+                  style={{
+                    maxHeight: "38px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center"
+                  }}
+                  onClick={() => {
+                    setTransferPlaylist(false);
+                  }}
+                ></input>
+                <TransferPlaylist />
+              </Container>
+            </UserChannelInfo.Provider>
           )}
         </Container>
       ) : (
