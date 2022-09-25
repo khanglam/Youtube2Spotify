@@ -1,4 +1,5 @@
 # from crypt import methods
+from distutils.log import error
 from lib2to3.pgen2 import token
 from flask_cors import CORS, cross_origin
 import json
@@ -9,14 +10,18 @@ from server.forms import RegistrationForm, LoginForm
 from server.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 import base64
+
+# Spotify Libraries
 from spotipy.oauth2 import SpotifyOAuth
 import lyricsgenius as lg
+import requests
 
 # Youtube API Libraries
 import pickle #library to store/load bytes file
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+import youtube_dl
 
 @app.route("/@me")
 def get_current_user():
@@ -121,13 +126,27 @@ def logout():
 def account():
     return render_template('account.html', title='Account')
 
-# Spotify configuration
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─██████████████─██████████████─██████████████─██████████████─██████████─██████████████─████████──████████─
+# ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░░░██──██░░░░██─
+# ─██░░██████████─██░░██████░░██─██░░██████░░██─██████░░██████─████░░████─██░░██████████─████░░██──██░░████─
+# ─██░░██─────────██░░██──██░░██─██░░██──██░░██─────██░░██───────██░░██───██░░██───────────██░░░░██░░░░██───
+# ─██░░██████████─██░░██████░░██─██░░██──██░░██─────██░░██───────██░░██───██░░██████████───████░░░░░░████───
+# ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██──██░░██─────██░░██───────██░░██───██░░░░░░░░░░██─────████░░████─────
+# ─██████████░░██─██░░██████████─██░░██──██░░██─────██░░██───────██░░██───██░░██████████───────██░░██───────
+# ─────────██░░██─██░░██─────────██░░██──██░░██─────██░░██───────██░░██───██░░██───────────────██░░██───────
+# ─██████████░░██─██░░██─────────██░░██████░░██─────██░░██─────████░░████─██░░██───────────────██░░██───────
+# ─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─────██░░██─────██░░░░░░██─██░░██───────────────██░░██───────
+# ─██████████████─██████─────────██████████████─────██████─────██████████─██████───────────────██████───────
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 CLIENT_ID = os.environ["CLIENT_ID"]
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]
 GENIUS_ACCESS_TOKEN = os.environ["GENIUS_ACCESS_TOKEN"]
 
 # Initial Spotify Login Authentication.
 TOKEN_INFO = "token_info"
+
 @app.route("/loginSpotify", methods=['GET'])
 def loginSpotify():
     sp_oauth = create_spotify_oauth()
@@ -164,6 +183,28 @@ def get_spotify_lyrics():
         "lyrics": lyrics
     })
 
+def get_spotify_uri(song_name, artist):
+    token_info = get_token()
+    #Search for Song
+    query = "https://api.spotify.com/v1/search?query=track%3A{}+artist%3A{}&type=track&offset=0&limit=20".format(
+        song_name,
+        artist
+    )
+    response = requests.get(
+        query,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": "Bearer {}".format(token_info["access_token"])
+        }
+    )
+ 
+    response_json = response.json()
+    songs = response_json["tracks"]["items"]
+    # only use the first song
+    uri = songs[0]["uri"]
+
+    return uri
+        
 # Create Spotify OAuth Object
 def create_spotify_oauth():
     return SpotifyOAuth(
@@ -174,7 +215,21 @@ def create_spotify_oauth():
         scope="user-library-read streaming"
     )
 
-# Youtube Configurations (Copied from YouTube)
+
+# ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─████████──████████─██████████████─██████──██████─██████████████─██████──██████─██████████████───██████████████─
+# ─██░░░░██──██░░░░██─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██───██░░░░░░░░░░██─
+# ─████░░██──██░░████─██░░██████░░██─██░░██──██░░██─██████░░██████─██░░██──██░░██─██░░██████░░██───██░░██████████─
+# ───██░░░░██░░░░██───██░░██──██░░██─██░░██──██░░██─────██░░██─────██░░██──██░░██─██░░██──██░░██───██░░██─────────
+# ───████░░░░░░████───██░░██──██░░██─██░░██──██░░██─────██░░██─────██░░██──██░░██─██░░██████░░████─██░░██████████─
+# ─────████░░████─────██░░██──██░░██─██░░██──██░░██─────██░░██─────██░░██──██░░██─██░░░░░░░░░░░░██─██░░░░░░░░░░██─
+# ───────██░░██───────██░░██──██░░██─██░░██──██░░██─────██░░██─────██░░██──██░░██─██░░████████░░██─██░░██████████─
+# ───────██░░██───────██░░██──██░░██─██░░██──██░░██─────██░░██─────██░░██──██░░██─██░░██────██░░██─██░░██─────────
+# ───────██░░██───────██░░██████░░██─██░░██████░░██─────██░░██─────██░░██████░░██─██░░████████░░██─██░░██████████─
+# ───────██░░██───────██░░░░░░░░░░██─██░░░░░░░░░░██─────██░░██─────██░░░░░░░░░░██─██░░░░░░░░░░░░██─██░░░░░░░░░░██─
+# ───────██████───────██████████████─██████████████─────██████─────██████████████─████████████████─██████████████─
+# ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 api_service_name = "youtube"
 api_version = "v3"
 client_secrets_file = "yt_client_secrets.json"
@@ -228,3 +283,52 @@ def get_yt_channelInfo():
     channel_name = response["items"][0]["snippet"]["title"]
 
     return channel_name
+
+@app.route("/getYtAlbumSongs", methods=['GET'])
+def get_yt_albumSongs():
+    playlistId = request.args.get("playlistId")
+    all_song_info = {}
+    youtube_client = get_youtube_client()
+    req = youtube_client.playlistItems().list(
+        part="contentDetails,snippet,id",
+        playlistId=playlistId,
+        maxResults=50,
+    )
+    response = req.execute()
+        
+    for item in response["items"]:
+        video_title = item["snippet"]["title"]
+        youtube_url = "https://www.youtube.com/watch?v={}".format(item["contentDetails"]["videoId"])
+        song_name = None
+        artist = None
+        try:
+            # use youtube_dl to collect the song name & artist name
+            video = youtube_dl.YoutubeDL({}).extract_info(youtube_url, download=False)
+            song_name = video["track"]
+            artist = video["artist"]
+
+            if song_name and artist:
+                # save all important info and skip any missing song and artist
+                all_song_info[video_title] = {
+                    "youtube_url": youtube_url,
+                    "song_name": song_name,
+                    "artist": artist,
+
+                    # add the uri, easy to get song to put into playlist
+                    "spotify_uri": get_spotify_uri(song_name, artist)
+                }
+        except:
+            all_song_info[video_title] = {
+                "youtube_url": youtube_url,
+                "song_name": song_name,
+                "artist": artist,
+
+                # add the uri, easy to get song to put into playlist
+                "spotify_uri": None
+            }
+
+    return jsonify({
+        "response":response,
+        "all_song_info" : all_song_info
+    })
+    # return response

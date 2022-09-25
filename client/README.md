@@ -14,6 +14,7 @@ Youtube Data API
 import pickle #library to store/load bytes file
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+import youtube_dl - library for extracting information from a youtube URL, like artist names.
 
 Problems faced:
 -Lots of CORS Issues with YouTube Data API, some of which was due to withCredentials being set to true. To solve this, we needed to make another instance of axios that handles axios create without withCredentials.

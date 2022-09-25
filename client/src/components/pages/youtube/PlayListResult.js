@@ -1,18 +1,25 @@
 import React from "react";
 
-export default function PlayListResult({ album }) {
+export default function PlayListResult({ album, chooseAlbum }) {
   function handlePlay() {
-    // chooseTrack(album);
+    chooseAlbum(album);
   }
 
   return (
     <div
-      className='d-flex m-2 align-items-center'
+      className="d-flex m-2 align-items-center"
       style={{ cursor: "pointer" }}
       onClick={handlePlay}
     >
-      <img src={album.albumUrl} style={{ height: "128px", width: "128px" }} />
-      <div className='ml-3'>
+      <img src={album.thumbnail} style={{ height: "128px", width: "128px" }} />
+      <div
+        className="text-center ml-3"
+        style={{
+          whiteSpace: "pre",
+          fontFamily: "Comic Sans",
+          fontSize: "25px",
+        }}
+      >
         <div>{album.title}</div>
       </div>
     </div>
