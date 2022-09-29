@@ -150,8 +150,7 @@ TOKEN_INFO = "token_info"
 @app.route("/loginSpotify", methods=['GET'])
 def loginSpotify():
     sp_oauth = create_spotify_oauth()
-    auth_url = sp_oauth.get_authorize_url()
-    # session.clear()
+    # auth_url = sp_oauth.get_authorize_url()
     code = request.args.get("code")
     token_info = sp_oauth.get_access_token(code)
     session[TOKEN_INFO] = token_info
@@ -186,7 +185,7 @@ def get_spotify_lyrics():
 def get_spotify_uri(song_name, artist):
     token_info = get_token()
     #Search for Song
-    query = "https://api.spotify.com/v1/search?query=track%3A{}+artist%3A{}&type=track&offset=0&limit=20".format(
+    query = "https://api.spotify.com/v1/search?q=track%3A{}artist%3A{}&type=track&offset=0&limit=20".format(
         song_name,
         artist
     )
@@ -197,7 +196,7 @@ def get_spotify_uri(song_name, artist):
             "Authorization": "Bearer {}".format(token_info["access_token"])
         }
     )
- 
+
     response_json = response.json()
     songs = response_json["tracks"]["items"]
     # only use the first song
@@ -208,11 +207,12 @@ def get_spotify_uri(song_name, artist):
 # Create Spotify OAuth Object
 def create_spotify_oauth():
     return SpotifyOAuth(
+        show_dialog=True,
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         redirect_uri='http://localhost:3000/Spotify',
         # scope="user-library-read streaming user-read-email user-read-private user-library-modify user-read-playback-state user-modify-playback-state"
-        scope="user-library-read streaming"
+        scope="user-library-read streaming playlist-modify-public playlist-modify-private"
     )
 
 
@@ -287,15 +287,16 @@ def get_yt_channelInfo():
 @app.route("/getYtAlbumSongs", methods=['GET'])
 def get_yt_albumSongs():
     playlistId = request.args.get("playlistId")
-    all_song_info = {}
+    all_song_info = [{}] #This needs to be a list of dictionaries so we can use map() function in React
     youtube_client = get_youtube_client()
+    youtube_dl.utils.std_headers['User-Agent'] = "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+
     req = youtube_client.playlistItems().list(
         part="contentDetails,snippet,id",
         playlistId=playlistId,
         maxResults=50,
     )
     response = req.execute()
-        
     for item in response["items"]:
         video_title = item["snippet"]["title"]
         youtube_url = "https://www.youtube.com/watch?v={}".format(item["contentDetails"]["videoId"])
@@ -309,26 +310,26 @@ def get_yt_albumSongs():
 
             if song_name and artist:
                 # save all important info and skip any missing song and artist
-                all_song_info[video_title] = {
+                all_song_info.append({
                     "youtube_url": youtube_url,
                     "song_name": song_name,
                     "artist": artist,
-
+                    "video_title": video_title,
                     # add the uri, easy to get song to put into playlist
-                    "spotify_uri": get_spotify_uri(song_name, artist)
-                }
+                    "spotify_uri": get_spotify_uri(video_title)
+                }) 
         except:
-            all_song_info[video_title] = {
+            all_song_info.append({
                 "youtube_url": youtube_url,
                 "song_name": song_name,
                 "artist": artist,
-
+                "video_title": video_title,
                 # add the uri, easy to get song to put into playlist
                 "spotify_uri": None
-            }
+            }) 
 
-    return jsonify({
+    all_song_info.pop(0) # Useless first item of empty object
+    return {
         "response":response,
         "all_song_info" : all_song_info
-    })
-    # return response
+    }
