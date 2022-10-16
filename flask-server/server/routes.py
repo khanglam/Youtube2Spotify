@@ -150,8 +150,9 @@ TOKEN_INFO = "token_info"
 @app.route("/loginSpotify", methods=['GET'])
 def loginSpotify():
     sp_oauth = create_spotify_oauth()
-    # auth_url = sp_oauth.get_authorize_url()
-    code = request.args.get("code")
+    # sp_oauth.cache_handler.save_token_to_cache(None)
+    auth_url = sp_oauth.get_authorize_url()  # Get the URL that Spotify API Opens Automatically
+    code = request.args.get("code")          # fetch for the code inside that auth_url.
     token_info = sp_oauth.get_access_token(code)
     session[TOKEN_INFO] = token_info
     return token_info
@@ -211,8 +212,7 @@ def create_spotify_oauth():
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         redirect_uri='http://localhost:3000/Spotify',
-        # scope="user-library-read streaming user-read-email user-read-private user-library-modify user-read-playback-state user-modify-playback-state"
-        scope="user-library-read streaming playlist-modify-public playlist-modify-private"
+        scope="user-library-read streaming user-read-email user-read-private user-library-modify user-read-playback-state user-modify-playback-state"
     )
 
 

@@ -31,6 +31,8 @@ function Spotify() {
     }
   };
 
+  function clearSpotifyCache() {}
+
   // Refresh Token Hook
   useEffect(() => {
     if (!refreshToken || !expiresIn) return;
@@ -57,13 +59,19 @@ function Spotify() {
   return (
     <>
       {tokenInfo ? (
-        <Container
-          className='d-flex justify-content-center align-items-center'
-          style={{ minHeight: "90vh" }}
+        <Container // Initial Login Page
+          style={{
+            minHeight: "90vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
         >
           {streamMusic ? (
             <TokenInfo.Provider value={tokenInfo}>
-              <Container className='d-flex justify-content-center'>
+              <Container // Stream Music Page
+                className='d-flex justify-content-center'
+              >
                 <input
                   type='button'
                   className='btn btn-success'
@@ -82,14 +90,32 @@ function Spotify() {
               </Container>
             </TokenInfo.Provider>
           ) : (
-            <input
-              value='Stream Music'
-              type='button'
-              className='btn btn-success btn-lg'
-              onClick={() => {
-                setStreamMusic(true);
+            <Container // Menu Page
+              style={{
+                minHeight: "90vh",
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                flexDirection: "column"
               }}
-            ></input>
+            >
+              <input
+                value='Stream Music'
+                type='button'
+                className='btn btn-success btn-lg'
+                onClick={() => {
+                  setStreamMusic(true);
+                }}
+              ></input>
+              <input
+                value='Clear Cache'
+                type='button'
+                className='btn btn-danger btn-lg'
+                onClick={() => {
+                  clearSpotifyCache();
+                }}
+              ></input>
+            </Container>
           )}
         </Container>
       ) : (
