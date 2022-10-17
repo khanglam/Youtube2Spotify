@@ -46,22 +46,32 @@ function TransferPlaylist() {
           return {
             track: track,
             uri: uri,
-            confidence: "high"
+            confidence: "high",
           };
         });
       } else {
+        const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
+          .replace(/karaoke/gi, "")
+          .replace(/\[.*\]/, "")
+          .replace(/\(.*\)/, "");
         // If artist and song name is undefined, search by title
-        setExtractedSpotifyUri(
-          spotifyApi.searchTracks(item.video_title).then((res) => {
-            const uri = res.body.tracks.items[0].uri;
-            const track = res.body.tracks.items[0].name;
-            return {
-              track: track,
-              uri: uri,
-              confidence: "low"
-            };
-          })
-        );
+        try {
+          console.log(parsedVideoTitle);
+          setExtractedSpotifyUri(
+            spotifyApi.searchTracks(parsedVideoTitle).then((res) => {
+              const uri = res.body.tracks.items[0].uri;
+              const track = res.body.tracks.items[0].name;
+              console.log(track + ": " + uri);
+              return {
+                track: track,
+                uri: uri,
+                confidence: "low",
+              };
+            })
+          );
+        } catch {
+          console.log("No Result For: " + parsedVideoTitle);
+        }
       }
     });
   };
@@ -79,8 +89,8 @@ function TransferPlaylist() {
 
         const response = await Axios.get("/getYtAlbumSongs", {
           params: {
-            playlistId: selectPlayList.playlistId
-          }
+            playlistId: selectPlayList.playlistId,
+          },
         });
         console.log(response.data);
         setChoosenPlaylistItems(
@@ -90,7 +100,7 @@ function TransferPlaylist() {
               // return for map
               title: video.snippet.title,
               thumbnail: videoThumbnail.url,
-              videoId: video.id
+              videoId: video.id,
             };
           })
         );
@@ -102,7 +112,7 @@ function TransferPlaylist() {
               track: song.song_name,
               spotify_uri: song.spotify_uri,
               video_title: song.video_title,
-              youtube_url: song.youtube_url
+              youtube_url: song.youtube_url,
             };
           })
         );
@@ -124,7 +134,7 @@ function TransferPlaylist() {
               // return for map
               title: album.snippet.title,
               thumbnail: albumThumbnail.url,
-              playlistId: album.id
+              playlistId: album.id,
             };
           })
         );
@@ -135,8 +145,8 @@ function TransferPlaylist() {
   }, []); // Only need to load this once
 
   return (
-    <Container className='d-flex flex-column' style={{ height: "90vh" }}>
-      <div className='flex-grow-1 my-2' style={{ overflowY: "auto" }}>
+    <Container className="d-flex flex-column" style={{ height: "90vh" }}>
+      <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
         {allPlayLists.map((album) => (
           <PlayListResult
             album={album}
@@ -146,11 +156,11 @@ function TransferPlaylist() {
         ))}
         {selectPlayList && (
           <div
-            className='text-center'
+            className="text-center"
             style={{
               whiteSpace: "pre",
               fontFamily: "Comic Sans",
-              fontSize: "25px"
+              fontSize: "25px",
             }}
           >
             {choosenPlaylistItems.map((video) => (
@@ -165,14 +175,14 @@ function TransferPlaylist() {
       </div>
       {selectPlayList && (
         <input
-          type='button'
-          className='btn btn-success'
-          value='Transfer This Playlist to Spotify'
+          type="button"
+          className="btn btn-success"
+          value="Transfer This Playlist to Spotify"
           style={{
             maxHeight: "38px",
             justifyContent: "center",
             alignItems: "center",
-            textAlign: "center"
+            textAlign: "center",
           }}
           onClick={() => {
             transferPlaylistToSpotify();

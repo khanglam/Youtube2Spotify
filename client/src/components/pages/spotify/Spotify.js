@@ -7,6 +7,7 @@ import { TokenInfo } from "./TokenInfo";
 
 const LOGIN_URL = "/loginSpotify";
 const REFRESH_TOKEN_URL = "/refreshSpotifyToken";
+const CLEAR_SPOTIFY_CACHE = "/clearSpotifyCache";
 
 function Spotify() {
   const [tokenInfo, setTokenInfo] = useState();
@@ -31,7 +32,15 @@ function Spotify() {
     }
   };
 
-  function clearSpotifyCache() {}
+  async function clearSpotifyCache() {
+    try {
+      const response = await Axios.get(CLEAR_SPOTIFY_CACHE);
+      console.log("Spotify Cache Cleared");
+      window.location = "/Spotify";
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // Refresh Token Hook
   useEffect(() => {
@@ -64,23 +73,23 @@ function Spotify() {
             minHeight: "90vh",
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           {streamMusic ? (
             <TokenInfo.Provider value={tokenInfo}>
               <Container // Stream Music Page
-                className='d-flex justify-content-center'
+                className="d-flex justify-content-center"
               >
                 <input
-                  type='button'
-                  className='btn btn-success'
-                  value='Back'
+                  type="button"
+                  className="btn btn-success"
+                  value="Back"
                   style={{
                     maxHeight: "38px",
                     justifyContent: "center",
                     alignItems: "center",
-                    textAlign: "center"
+                    textAlign: "center",
                   }}
                   onClick={() => {
                     setStreamMusic(false);
@@ -96,21 +105,21 @@ function Spotify() {
                 display: "flex",
                 justifyContent: "space-evenly",
                 alignItems: "center",
-                flexDirection: "column"
+                flexDirection: "column",
               }}
             >
               <input
-                value='Stream Music'
-                type='button'
-                className='btn btn-success btn-lg'
+                value="Stream Music"
+                type="button"
+                className="btn btn-success btn-lg"
                 onClick={() => {
                   setStreamMusic(true);
                 }}
               ></input>
               <input
-                value='Clear Cache'
-                type='button'
-                className='btn btn-danger btn-lg'
+                value="Clear Cache"
+                type="button"
+                className="btn btn-danger btn-lg"
                 onClick={() => {
                   clearSpotifyCache();
                 }}
@@ -120,18 +129,18 @@ function Spotify() {
         </Container>
       ) : (
         <Container
-          className='d-flex justify-content-center align-items-center'
+          className="d-flex justify-content-center align-items-center"
           style={{
-            minHeight: "90vh"
+            minHeight: "90vh",
           }}
         >
           <input
             onClick={handleSubmit}
-            className='btn btn-success btn-lg'
-            id='submit'
-            name='submit'
-            type='submit'
-            value='Login With Spotify'
+            className="btn btn-success btn-lg"
+            id="submit"
+            name="submit"
+            type="submit"
+            value="Login With Spotify"
           ></input>
         </Container>
       )}

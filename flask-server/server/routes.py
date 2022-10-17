@@ -21,6 +21,7 @@ import pickle #library to store/load bytes file
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+# from google.oauth2.credentials import credentials
 import youtube_dl
 
 @app.route("/@me")
@@ -150,7 +151,6 @@ TOKEN_INFO = "token_info"
 @app.route("/loginSpotify", methods=['GET'])
 def loginSpotify():
     sp_oauth = create_spotify_oauth()
-    # sp_oauth.cache_handler.save_token_to_cache(None)
     auth_url = sp_oauth.get_authorize_url()  # Get the URL that Spotify API Opens Automatically
     code = request.args.get("code")          # fetch for the code inside that auth_url.
     token_info = sp_oauth.get_access_token(code)
@@ -170,6 +170,12 @@ def get_token():
     token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
     session[TOKEN_INFO] = token_info
     return token_info
+
+@app.route("/clearSpotifyCache", methods=['GET'])
+def clearSpotifyCache():
+    sp_oauth = create_spotify_oauth()
+    sp_oauth.cache_handler.save_token_to_cache(None)
+    return "Cleared"
 
 @app.route("/spotifyLyrics", methods=['GET'])
 def get_spotify_lyrics():
@@ -253,11 +259,12 @@ def get_youtube_client():
             flow.run_local_server(port=3000, prompt='consent', authorization_prompt_message='') #prompt=consent is the fix for refresh token solution.
             # flow.run_console() #- Deprecated and is no longer supported. Check out https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html?m=1#disallowed-oob
             credentials = flow.credentials
+            
+        # Save the credentials for the next run - wb = write byte
+        with open('token.pickle', 'wb') as f:
+            print('Saving Credentials for Future Use...')
+            pickle.dump(credentials, f)
 
-            # Save the credentials for the next run - wb = write byte
-            with open('token.pickle', 'wb') as f:
-                print('Saving Credentials for Future Use...')
-                pickle.dump(credentials, f)
     youtube_client = build(api_service_name, api_version, credentials=credentials)
     return youtube_client
 
