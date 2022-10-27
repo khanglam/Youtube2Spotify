@@ -22,6 +22,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 # from google.oauth2.credentials import credentials
+from google.auth.exceptions import RefreshError
 import youtube_dl
 
 @app.route("/@me")
@@ -251,14 +252,23 @@ def get_youtube_client():
      # If there are no valid credentials available, then either refresh the token or log in.
     if not credentials or not credentials.valid:
         if credentials and credentials.expired and credentials.refresh_token:
-            print('Refreshing Access Token...')
-            credentials.refresh(Request())
+            try:
+                print('...Refreshing Access Token...')
+                credentials.refresh(Request())
+            except RefreshError:
+                print('...FAILED to Refresh Access Token...')
+                print('...Fetching New Tokens...')
+                flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file,scopes)
+                flow.run_local_server(port=3000, prompt='consent', authorization_prompt_message='') #prompt=consent is the fix for refresh token solution.
+                credentials = flow.credentials
+                credentials.refresh
         else:
-            print('Fetching New Tokens...')
+            print('...Fetching New Tokens...')
             flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file,scopes)
             flow.run_local_server(port=3000, prompt='consent', authorization_prompt_message='') #prompt=consent is the fix for refresh token solution.
             # flow.run_console() #- Deprecated and is no longer supported. Check out https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html?m=1#disallowed-oob
             credentials = flow.credentials
+            credentials.refresh
             
         # Save the credentials for the next run - wb = write byte
         with open('token.pickle', 'wb') as f:
