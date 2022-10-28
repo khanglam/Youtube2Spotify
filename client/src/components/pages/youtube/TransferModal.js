@@ -8,7 +8,7 @@ const STYLE = {
   transform: "translate(-50%, -50%)",
   backgroundColor: "#FFF",
   padding: "50px",
-  zIndex: 1000
+  zIndex: 1000,
 };
 const OVERLAY_STYLE = {
   position: "fixed",
@@ -18,14 +18,15 @@ const OVERLAY_STYLE = {
   bottom: 0,
   backgroundColor: "rgba(0, 0, 0, .7)",
   padding: "50px",
-  zIndex: 1000
+  zIndex: 1000,
 };
 
-export default function TransferModal({ track }) {
+export default function TransferModal({ song }) {
+  console.log(song);
   return ReactDom.createPortal(
     <>
       <div style={OVERLAY_STYLE} />
-      <div style={STYLE}>HELLO WORLD</div>
+      <div style={STYLE}>{song}</div>
       {/* <div className='d-flex m-2 align-items-center' style={STYLE}>
         <img src={track.albumUrl} style={{ height: "64px", width: "64px" }} />
         <div className='ml-3'>
