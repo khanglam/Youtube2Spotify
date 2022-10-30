@@ -30,32 +30,23 @@ function TransferPlaylist() {
   }
 
   const transferPlaylistToSpotify = async (e) => {
-    try {
-      // Get Spotify Access Token
-      const response = await Axios.get("/loginSpotify");
-      setAccessToken(response.data["access_token"]);
-      setRefreshToken(response.data["refresh_token"]);
-      setExpiresIn(response.data["expires_in"]);
-    } catch (error) {
-      console.log(error);
-    }
-
     setExtractedSpotifyUri(
       extractedSongs.map((item) => {
         if (item.track !== null && item.artist !== null) {
-          const [title, uri] = spotifyApi
+          const track = spotifyApi
             .searchTracks(item.track + " " + item.artist)
             .then((res) => {
               return {
                 title: res.body.tracks.items[0].name,
-                uri: res.body.tracks.items[0].uri,
+                uri: res.body.tracks.items[0].uri
                 // console.log(track + ": " + uri);
               };
             });
+          // return track.then((data) => data.title);
           return {
-            song: title[0],
-            url: uri[0],
-            confidence: "high",
+            song: track.then((data) => data.title),
+            url: track.then((data) => data.uri),
+            confidence: "high"
           };
         } else {
           const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
@@ -71,22 +62,24 @@ function TransferPlaylist() {
               .then((res) => {
                 return {
                   title: res.body.tracks.items[0].name,
-                  uri: res.body.tracks.items[0].uri,
+                  uri: res.body.tracks.items[0].uri
                   // console.log(track + ": " + uri)
                 };
               });
             return {
               song: track,
-              url: uri,
+              url: uri
               // confidence: "low",
             };
           } catch {
             console.log("No Result For: " + parsedVideoTitle);
           }
         }
-      })
+      }),
+      () => {
+        console.log(extractedSpotifyUri); //UseEffect!!! CALL BACK DEPRECATED!)
+      }
     );
-    console.log(extractedSpotifyUri);
   };
 
   useEffect(() => {
@@ -99,11 +92,11 @@ function TransferPlaylist() {
     (async () => {
       try {
         if (!selectedPlayList) return;
-        setExtractedSpotifyUri([]);
+        // setExtractedSpotifyUri([]);
         const response = await Axios.get("/getYtAlbumSongs", {
           params: {
-            playlistId: selectedPlayList.playlistId,
-          },
+            playlistId: selectedPlayList.playlistId
+          }
         });
         console.log(response.data);
         setChoosenPlaylistItems(
@@ -113,7 +106,7 @@ function TransferPlaylist() {
               // return for map
               title: video.snippet.title,
               thumbnail: videoThumbnail.url,
-              videoId: video.id,
+              videoId: video.id
             };
           })
         );
@@ -125,7 +118,7 @@ function TransferPlaylist() {
               track: song.song_name,
               spotify_uri: song.spotify_uri,
               video_title: song.video_title,
-              youtube_url: song.youtube_url,
+              youtube_url: song.youtube_url
             };
           })
         );
@@ -140,7 +133,14 @@ function TransferPlaylist() {
     (async () => {
       try {
         setSelectedPlayList(null);
-        const response = await Axios.get("/getYtPlaylist");
+
+        // Get Spotify Access Token
+        let response = await Axios.get("/loginSpotify");
+        setAccessToken(response.data["access_token"]);
+        setRefreshToken(response.data["refresh_token"]);
+        setExpiresIn(response.data["expires_in"]);
+
+        response = await Axios.get("/getYtPlaylist");
         setAllPlaylists(
           response.data.items.map((album) => {
             const albumThumbnail = album.snippet.thumbnails.high;
@@ -148,7 +148,7 @@ function TransferPlaylist() {
               // return for map
               title: album.snippet.title,
               thumbnail: albumThumbnail.url,
-              playlistId: album.id,
+              playlistId: album.id
             };
           })
         );
@@ -159,8 +159,8 @@ function TransferPlaylist() {
   }, []); // Only need to load this once
 
   return (
-    <Container className="d-flex flex-column" style={{ height: "90vh" }}>
-      <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
+    <Container className='d-flex flex-column' style={{ height: "90vh" }}>
+      <div className='flex-grow-1 my-2' style={{ overflowY: "auto" }}>
         {allPlayLists.map((album) => (
           <PlayListResult
             album={album}
@@ -170,11 +170,11 @@ function TransferPlaylist() {
         ))}
         {selectedPlayList && (
           <div
-            className="text-center"
+            className='text-center'
             style={{
               whiteSpace: "pre",
               fontFamily: "Comic Sans",
-              fontSize: "25px",
+              fontSize: "25px"
             }}
           >
             {choosenPlaylistItems.map((video) => (
@@ -199,16 +199,18 @@ function TransferPlaylist() {
       </div>
       {selectedPlayList && (
         <input
-          type="button"
-          className="btn btn-success"
-          value="Transfer This Playlist to Spotify"
+          type='button'
+          className='btn btn-success'
+          value='Transfer This Playlist to Spotify'
           style={{
             maxHeight: "38px",
             justifyContent: "center",
             alignItems: "center",
-            textAlign: "center",
+            textAlign: "center"
           }}
-          onClick={transferPlaylistToSpotify}
+          onClick={() => {
+            transferPlaylistToSpotify();
+          }}
         ></input>
       )}
     </Container>
