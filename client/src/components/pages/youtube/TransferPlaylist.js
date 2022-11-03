@@ -30,45 +30,45 @@ function TransferPlaylist() {
   }
 
   const transferPlaylistToSpotify = async (e) => {
-    await setExtractedSpotifyUri(
-      await extractedSongs.map((item) => {
-        if (item.track !== null && item.artist !== null) {
+    // setExtractedSpotifyUri(
+    extractedSongs.map((item) => {
+      if (item.track !== null && item.artist !== null) {
+        spotifyApi.searchTracks(item.track + " " + item.artist).then((res) => {
+          setExtractedSpotifyUri(
+            res.body.tracks.items.map((track) => {
+              return {
+                title: track.name,
+                uri: track.uri,
+                confidence: "high",
+              };
+            })
+          );
+        });
+      } else {
+        const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
+          .replace(/karaoke/gi, "")
+          .replace(/\[.*\]/, "")
+          .replace(/\(.*\)/, "");
+        // If artist and song name is undefined, search by title
+        try {
+          console.log(parsedVideoTitle);
+
           const track = spotifyApi
-            .searchTracks(item.track + " " + item.artist)
+            .searchTracks(parsedVideoTitle)
             .then((res) => {
-              res.body.tracks.items.map((track) => {}); // Not Finished
               return {
                 title: res.body.tracks.items[0].name,
                 uri: res.body.tracks.items[0].uri,
-                confidence: "high",
+                confidence: "low",
               };
             });
           return track;
-        } else {
-          const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
-            .replace(/karaoke/gi, "")
-            .replace(/\[.*\]/, "")
-            .replace(/\(.*\)/, "");
-          // If artist and song name is undefined, search by title
-          try {
-            console.log(parsedVideoTitle);
-
-            const track = spotifyApi
-              .searchTracks(parsedVideoTitle)
-              .then((res) => {
-                return {
-                  title: res.body.tracks.items[0].name,
-                  uri: res.body.tracks.items[0].uri,
-                  confidence: "low",
-                };
-              });
-            return track;
-          } catch {
-            console.log("No Result For: " + parsedVideoTitle);
-          }
+        } catch {
+          console.log("No Result For: " + parsedVideoTitle);
         }
-      })
-    );
+      }
+    });
+    // );
   };
   // Print out extractedSpotifyUri with useEffect as useState's CallBack.
   useEffect(() => {
