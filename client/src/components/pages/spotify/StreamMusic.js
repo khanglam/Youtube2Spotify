@@ -32,8 +32,8 @@ function StreamMusic() {
         const response = await Axios.get("spotifyLyrics", {
           params: {
             track: playingTrack.title,
-            artist: playingTrack.artist
-          }
+            artist: playingTrack.artist,
+          },
         });
         setLyrics(response.data.lyrics);
       } catch (error) {
@@ -76,7 +76,7 @@ function StreamMusic() {
             artist: track.artists[0].name,
             title: track.name,
             uri: track.uri,
-            albumUrl: smallestAlbumImage.url
+            albumUrl: smallestAlbumImage.url,
           };
         })
       );
@@ -88,14 +88,14 @@ function StreamMusic() {
   }, [search, accessToken]);
 
   return (
-    <Container className='d-flex flex-column' style={{ height: "90vh" }}>
+    <Container className="d-flex flex-column" style={{ height: "90vh" }}>
       <Form.Control
-        type='search'
-        placeholder='Search Songs/Artists'
+        type="search"
+        placeholder="Search Songs/Artists"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <div className='flex-grow-1 my-2' style={{ overflowY: "auto" }}>
+      <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
         {searchResults.map((track) => (
           <TrackSearchResult
             track={track}
@@ -105,11 +105,11 @@ function StreamMusic() {
         ))}
         {searchResults.length === 0 && (
           <div
-            className='text-center'
+            className="text-center"
             style={{
               whiteSpace: "pre",
               fontFamily: "Comic Sans",
-              fontSize: "25px"
+              fontSize: "25px",
             }}
           >
             {lyrics}
