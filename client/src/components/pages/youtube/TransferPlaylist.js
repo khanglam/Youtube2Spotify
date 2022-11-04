@@ -29,21 +29,23 @@ function TransferPlaylist() {
     setAllPlaylists([]);
   }
 
-  const transferPlaylistToSpotify = async (e) => {
+  function transferPlaylistToSpotify() {
     // setExtractedSpotifyUri(
     extractedSongs.map((item) => {
       if (item.track !== null && item.artist !== null) {
+        // setExtractedSpotifyUri(
         spotifyApi.searchTracks(item.track + " " + item.artist).then((res) => {
-          setExtractedSpotifyUri(
-            res.body.tracks.items.map((track) => {
-              return {
-                title: track.name,
-                uri: track.uri,
-                confidence: "high",
-              };
-            })
-          );
+          // setExtractedSpotifyUri(
+          // res.body.tracks.items.map((track) => {
+          return {
+            title: res.body.tracks.items[0].name,
+            uri: res.body.tracks.items[0].uri,
+            confidence: "high"
+          };
+          // });
+          // );
         });
+        // );
       } else {
         const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
           .replace(/karaoke/gi, "")
@@ -51,31 +53,42 @@ function TransferPlaylist() {
           .replace(/\(.*\)/, "");
         // If artist and song name is undefined, search by title
         try {
-          console.log(parsedVideoTitle);
-
-          const track = spotifyApi
-            .searchTracks(parsedVideoTitle)
-            .then((res) => {
-              return {
-                title: res.body.tracks.items[0].name,
-                uri: res.body.tracks.items[0].uri,
-                confidence: "low",
-              };
-            });
-          return track;
+          spotifyApi.searchTracks(parsedVideoTitle).then((res) => {
+            // setExtractedSpotifyUri(
+            // res.body.tracks.items.map((track) => {
+            return {
+              title: res.body.tracks.items[0].name,
+              uri: res.body.tracks.items[0].uri,
+              confidence: "high"
+            };
+            // });
+            // );
+          });
         } catch {
           console.log("No Result For: " + parsedVideoTitle);
         }
       }
     });
     // );
-  };
+  }
   // Print out extractedSpotifyUri with useEffect as useState's CallBack.
   useEffect(() => {
     (async () => {
       console.log(extractedSpotifyUri);
     })();
   }, [extractedSpotifyUri]);
+
+  useEffect(() => {
+    const transfer = async () => {
+      try {
+        const song = await transferPlaylistToSpotify();
+        setExtractedSpotifyUri(song);
+      } catch (error) {
+        // handle any error state, rejected promises, etc..
+      }
+    };
+    transfer();
+  }, []);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -90,8 +103,8 @@ function TransferPlaylist() {
         // setExtractedSpotifyUri([]);
         const response = await Axios.get("/getYtAlbumSongs", {
           params: {
-            playlistId: selectedPlayList.playlistId,
-          },
+            playlistId: selectedPlayList.playlistId
+          }
         });
         console.log(response.data);
         setChoosenPlaylistItems(
@@ -101,7 +114,7 @@ function TransferPlaylist() {
               // return for map
               title: video.snippet.title,
               thumbnail: videoThumbnail.url,
-              videoId: video.id,
+              videoId: video.id
             };
           })
         );
@@ -113,7 +126,7 @@ function TransferPlaylist() {
               track: song.song_name,
               spotify_uri: song.spotify_uri,
               video_title: song.video_title,
-              youtube_url: song.youtube_url,
+              youtube_url: song.youtube_url
             };
           })
         );
@@ -143,7 +156,7 @@ function TransferPlaylist() {
               // return for map
               title: album.snippet.title,
               thumbnail: albumThumbnail.url,
-              playlistId: album.id,
+              playlistId: album.id
             };
           })
         );
@@ -154,8 +167,8 @@ function TransferPlaylist() {
   }, []); // Only need to load this once
 
   return (
-    <Container className="d-flex flex-column" style={{ height: "90vh" }}>
-      <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
+    <Container className='d-flex flex-column' style={{ height: "90vh" }}>
+      <div className='flex-grow-1 my-2' style={{ overflowY: "auto" }}>
         {allPlayLists.map((album) => (
           <PlayListResult
             album={album}
@@ -165,11 +178,11 @@ function TransferPlaylist() {
         ))}
         {selectedPlayList && (
           <div
-            className="text-center"
+            className='text-center'
             style={{
               whiteSpace: "pre",
               fontFamily: "Comic Sans",
-              fontSize: "25px",
+              fontSize: "25px"
             }}
           >
             {choosenPlaylistItems.map((video) => (
@@ -179,7 +192,7 @@ function TransferPlaylist() {
                 // chooseAlbum={chooseAlbum}
               />
             ))}
-            {extractedSpotifyUri.length === 0 && (
+            {/* {extractedSpotifyUri.length === 0 && (
               <div>
                 {extractedSpotifyUri.map((item) => (
                   <TransferModal
@@ -188,20 +201,20 @@ function TransferPlaylist() {
                   />
                 ))}
               </div>
-            )}
+            )} */}
           </div>
         )}
       </div>
       {selectedPlayList && (
         <input
-          type="button"
-          className="btn btn-success"
-          value="Transfer This Playlist to Spotify"
+          type='button'
+          className='btn btn-success'
+          value='Transfer This Playlist to Spotify'
           style={{
             maxHeight: "38px",
             justifyContent: "center",
             alignItems: "center",
-            textAlign: "center",
+            textAlign: "center"
           }}
           onClick={() => {
             transferPlaylistToSpotify();
