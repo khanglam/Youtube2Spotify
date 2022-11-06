@@ -20,8 +20,6 @@ function TransferPlaylist() {
 
   // Spotify API Variables
   const [accessToken, setAccessToken] = useState(null);
-  const [refreshToken, setRefreshToken] = useState(null);
-  const [expiresIn, setExpiresIn] = useState(null);
   const [extractedSpotifyUri, setExtractedSpotifyUri] = useState([]); // Extracted Spotify Song List URI after Yt -> Spotify conversion
 
   function chooseAlbum(album) {
@@ -29,14 +27,13 @@ function TransferPlaylist() {
     setAllPlaylists([]);
   }
 
-  const transferPlaylistToSpotify = async (e) => {
+  function transferPlaylistToSpotify() {
     setExtractedSpotifyUri(
       extractedSongs.map((item) => {
         if (item.track !== null && item.artist !== null) {
-          const track = spotifyApi
+          return spotifyApi
             .searchTracks(item.track + " " + item.artist)
             .then((res) => {
-              res.body.tracks.items.map((track) => {}); // Not Finished
               return {
                 title: res.body.tracks.items[0].name,
                 artist: res.body.tracks.items[0].artists[0].name,
@@ -44,7 +41,6 @@ function TransferPlaylist() {
                 confidence: "high",
               };
             });
-          return track;
         } else {
           const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
             .replace(/karaoke/gi, "")
@@ -52,24 +48,22 @@ function TransferPlaylist() {
             .replace(/\(.*\)/, "");
           // If artist and song name is undefined, search by title
           try {
-            const track = spotifyApi
-              .searchTracks(parsedVideoTitle)
-              .then((res) => {
-                return {
-                  title: res.body.tracks.items[0].name,
-                  artist: res.body.tracks.items[0].artists[0].name,
-                  uri: res.body.tracks.items[0].uri,
-                  confidence: "low",
-                };
-              });
-            return track;
+            return spotifyApi.searchTracks(parsedVideoTitle).then((res) => {
+              return {
+                title: res.body.tracks.items[0].name,
+                artist: res.body.tracks.items[0].artists[0].name,
+                uri: res.body.tracks.items[0].uri,
+                confidence: "low",
+              };
+            });
           } catch {
             console.log("No Result For: " + parsedVideoTitle);
           }
         }
+        return;
       })
     );
-  };
+  }
   // Print out extractedSpotifyUri with useEffect as useState's CallBack.
   useEffect(() => {
     (async () => {
@@ -132,8 +126,6 @@ function TransferPlaylist() {
         // Get Spotify Access Token
         let response = await Axios.get("/loginSpotify");
         setAccessToken(response.data["access_token"]);
-        setRefreshToken(response.data["refresh_token"]);
-        setExpiresIn(response.data["expires_in"]);
 
         response = await Axios.get("/getYtPlaylist");
         setAllPlaylists(
@@ -173,22 +165,15 @@ function TransferPlaylist() {
             }}
           >
             {choosenPlaylistItems.map((video) => (
-              <VideoResults
-                video={video}
-                key={video.id}
-                // chooseAlbum={chooseAlbum}
-              />
+              <VideoResults video={video} key={video.id} />
             ))}
-            {/* {extractedSpotifyUri.length === 0 && (
+            {extractedSpotifyUri.length === 0 && (
               <div>
                 {extractedSpotifyUri.map((item) => (
-                  <TransferModal
-                    song={item}
-                    // key={item.uri}
-                  />
+                  <TransferModal song={item} key={item.uri} />
                 ))}
               </div>
-            )} */}
+            )}
           </div>
         )}
       </div>
