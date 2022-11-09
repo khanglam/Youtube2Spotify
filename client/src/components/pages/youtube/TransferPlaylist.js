@@ -28,48 +28,53 @@ function TransferPlaylist() {
   }
 
   function transferPlaylistToSpotify() {
-    setExtractedSpotifyUri(
-      extractedSongs.map((item) => {
-        if (item.track !== null && item.artist !== null) {
-          return spotifyApi
-            .searchTracks(item.track + " " + item.artist)
-            .then((res) => {
-              return {
-                title: res.body.tracks.items[0].name,
-                artist: res.body.tracks.items[0].artists[0].name,
-                uri: res.body.tracks.items[0].uri,
-                confidence: "high",
-              };
-            });
-        } else {
-          const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
-            .replace(/karaoke/gi, "")
-            .replace(/\[.*\]/, "")
-            .replace(/\(.*\)/, "");
-          // If artist and song name is undefined, search by title
-          try {
-            return spotifyApi.searchTracks(parsedVideoTitle).then((res) => {
-              return {
-                title: res.body.tracks.items[0].name,
-                artist: res.body.tracks.items[0].artists[0].name,
-                uri: res.body.tracks.items[0].uri,
-                confidence: "low",
-              };
-            });
-          } catch {
-            console.log("No Result For: " + parsedVideoTitle);
-          }
+    // setExtractedSpotifyUri(
+    extractedSongs.map(async (item) => {
+      if (item.track !== null && item.artist !== null) {
+        const searchRes = await spotifyApi.searchTracks(
+          item.track + " " + item.artist
+        );
+        setExtractedSpotifyUri((prevState) => [
+          ...prevState,
+          {
+            confidence: "high",
+            title: searchRes.body.tracks.items[0].name,
+            artist: searchRes.body.tracks.items[0].artists[0].name,
+            uri: searchRes.body.tracks.items[0].uri,
+          },
+        ]);
+        // });
+      } else {
+        const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
+          .replace(/karaoke/gi, "")
+          .replace(/\[.*\]/, "")
+          .replace(/\(.*\)/, "");
+        // If artist and song name is undefined, search by title
+        try {
+          const searchRes = await spotifyApi.searchTracks(parsedVideoTitle);
+          setExtractedSpotifyUri((prevState) => [
+            ...prevState,
+            {
+              confidence: "low",
+              title: searchRes.body.tracks.items[0].name,
+              artist: searchRes.body.tracks.items[0].artists[0].name,
+              uri: searchRes.body.tracks.items[0].uri,
+            },
+          ]);
+        } catch {
+          console.log("No Result For: " + parsedVideoTitle);
         }
-        return;
-      })
-    );
+      }
+    });
+    // );
+    console.log(extractedSpotifyUri);
   }
   // Print out extractedSpotifyUri with useEffect as useState's CallBack.
-  useEffect(() => {
-    (async () => {
-      console.log(extractedSpotifyUri);
-    })();
-  }, [extractedSpotifyUri]);
+  // useEffect(() => {
+  //   (async () => {
+  //     console.log(extractedSpotifyUri);
+  //   })();
+  // }, [extractedSpotifyUri]);
 
   useEffect(() => {
     if (!accessToken) return;
