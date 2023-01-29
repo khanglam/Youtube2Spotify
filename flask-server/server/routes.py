@@ -50,8 +50,8 @@ def oldRegister():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(
-            form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data,
+            form.password.body).decode('utf-8')
+        user = User(username=form.username.body, email=form.email.body,
                     password=hashed_password)  # Creating entry for DB
         db.session.add(user)
         db.session.commit()
@@ -90,9 +90,9 @@ def oldLogin():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
+        user = User.query.filter_by(email=form.email.body).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.body):
+            login_user(user, remember=form.remember.body)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
@@ -211,7 +211,44 @@ def get_spotify_uri(song_name, artist):
     uri = songs[0]["uri"]
 
     return uri
-        
+
+@app.route("/addSongsToPlaylist", methods=['POST'])
+def add_song_to_playlist():
+    song_uris = request.json['song_uris']
+    playlist_name = request.json['playlist_name']
+
+    token_info = get_token()
+    headers = {
+        "Authorization": "Bearer " + token_info["access_token"],
+        "Content-Type": "application/json"
+    }
+
+    body = {
+        "name": playlist_name,
+        "description": "Imported songs from Youtube Playlist",
+        "public": True
+    }
+    user_reponse = requests.get("https://api.spotify.com/v1/me", headers=headers)
+    user_id = user_reponse.json()["id"]
+
+    url = f"https://api.spotify.com/v1/users/{user_id}/playlists"
+    response = requests.post(url, headers=headers, json=body)
+
+    if response.status_code == 201:
+        print(f"Successfully created playlist '{playlist_name}'")
+        playlist_id = response.json()["id"]
+        # Add songs to the playlist
+        add_songs_url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        data = {
+            "uris": song_uris
+        }
+        requests.post(add_songs_url, headers=headers, data=data)
+        return "Playlist created and songs added successfully"
+    else:
+        print(f"Failed to create playlist. Error: {response.json()}")
+        return None
+
+
 # Create Spotify OAuth Object
 def create_spotify_oauth():
     return SpotifyOAuth(
