@@ -22,15 +22,17 @@ function TransferPlaylist() {
   const [accessToken, setAccessToken] = useState(null);
   const [spotifyItems, setSpotifyItems] = useState([]); // Extracted Spotify Song List URI after Yt -> Spotify conversion
   const [spotifyURIs, setSpotifyURIs] = useState([]);
+  const [isRequestDone, setIsRequestDone] = useState(false);
 
   function chooseAlbum(album) {
     setSelectedPlayList(album);
     setAllPlaylists([]);
   }
 
-  function transferPlaylistToSpotify() {
+  async function transferPlaylistToSpotify() {
     setSpotifyItems([]);
     setSpotifyURIs([]);
+    setIsRequestDone(false);
     youtubeItems.map(async (item) => {
       if (item.track !== null && item.artist !== null) {
         const searchRes = await spotifyApi.searchTracks(
@@ -52,9 +54,14 @@ function TransferPlaylist() {
             artist: searchRes.body.tracks.items[0].artists[0].name,
             uri: searchRes.body.tracks.items[0].uri,
             thumbnail: smallestAlbumImage.url,
-            key: item.video_title
-          }
+            key: item.video_title,
+          },
         ]);
+        setSpotifyURIs((prevState) => [
+          ...prevState,
+          searchRes.body.tracks.items[0].uri,
+        ]);
+        setIsRequestDone(true);
       } else {
         const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
           .replace(/karaoke/gi, "")
@@ -79,9 +86,14 @@ function TransferPlaylist() {
               artist: searchRes.body.tracks.items[0].artists[0].name,
               uri: searchRes.body.tracks.items[0].uri,
               thumbnail: smallestAlbumImage.url,
-              key: item.video_title
-            }
+              key: item.video_title,
+            },
           ]);
+          setSpotifyURIs((prevState) => [
+            ...prevState,
+            searchRes.body.tracks.items[0].uri,
+          ]);
+          setIsRequestDone(true);
         } catch {
           console.log("No Result For: " + parsedVideoTitle);
         }
@@ -90,28 +102,34 @@ function TransferPlaylist() {
   }
   // Print out spotifyItems with useEffect as useState's CallBack.
   useEffect(() => {
-    setSpotifyURIs(
-      spotifyItems.map((items) => {
-        return {
-          // return for map
-          uri: items.uri
-        };
-      })
-    );
-    console.log(spotifyItems);
-  }, [spotifyItems]);
+    if (isRequestDone) {
+      const call = async () => {
+        try {
+          console.log(spotifyURIs);
+          // const response = await Axios.post("/addSongsToPlaylist", {
+          //   song_uris: spotifyURIs,
+          //   playlist_name: "Imported Youtube Playlist",
+          // });
+          // console.log(response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      call();
+    }
+  }, [spotifyURIs]);
 
-  const addSongsToPlaylist = async () => {
+  async function addSongsToPlaylist() {
     try {
       const response = await Axios.post("/addSongsToPlaylist", {
         song_uris: spotifyURIs,
-        playlist_name: "Imported Youtube Playlist"
+        playlist_name: "Imported Youtube Playlist",
       });
       console.log(response.data);
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
   useEffect(() => {
     if (!accessToken) return;
@@ -125,8 +143,8 @@ function TransferPlaylist() {
         if (!selectedPlayList) return;
         const response = await Axios.get("/getYtAlbumSongs", {
           params: {
-            playlistId: selectedPlayList.playlistId
-          }
+            playlistId: selectedPlayList.playlistId,
+          },
         });
         // console.log(response.data);
         setChoosenPlaylistItems(
@@ -136,7 +154,7 @@ function TransferPlaylist() {
               // return for map
               title: video.snippet.title,
               thumbnail: videoThumbnail.url,
-              videoId: video.id
+              videoId: video.id,
             };
           })
         );
@@ -148,7 +166,7 @@ function TransferPlaylist() {
               track: song.song_name,
               spotify_uri: song.spotify_uri,
               video_title: song.video_title,
-              youtube_url: song.youtube_url
+              youtube_url: song.youtube_url,
             };
           })
         );
@@ -176,7 +194,7 @@ function TransferPlaylist() {
               // return for map
               title: album.snippet.title,
               thumbnail: albumThumbnail.url,
-              playlistId: album.id
+              playlistId: album.id,
             };
           })
         );
@@ -187,8 +205,8 @@ function TransferPlaylist() {
   }, []); // Only need to load this once
 
   return (
-    <Container className='d-flex flex-column' style={{ height: "90vh" }}>
-      <div className='flex-grow-1 my-2' style={{ overflowY: "auto" }}>
+    <Container className="d-flex flex-column" style={{ height: "90vh" }}>
+      <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
         {allPlayLists.map((album) => (
           <PlayListResult
             album={album}
@@ -198,11 +216,11 @@ function TransferPlaylist() {
         ))}
         {selectedPlayList && (
           <div
-            className='text-center'
+            className="text-center"
             style={{
               whiteSpace: "pre",
               fontFamily: "Comic Sans",
-              fontSize: "25px"
+              fontSize: "25px",
             }}
           >
             {choosenPlaylistItems.map(
@@ -226,18 +244,18 @@ function TransferPlaylist() {
       </div>
       {selectedPlayList && (
         <input
-          type='button'
-          className='btn btn-success'
-          value='Transfer This Playlist to Spotify'
+          type="button"
+          className="btn btn-success"
+          value="Transfer This Playlist to Spotify"
           style={{
             maxHeight: "38px",
             justifyContent: "center",
             alignItems: "center",
-            textAlign: "center"
+            textAlign: "center",
           }}
           onClick={() => {
             transferPlaylistToSpotify();
-            addSongsToPlaylist();
+            // addSongsToPlaylist();
           }}
         ></input>
       )}

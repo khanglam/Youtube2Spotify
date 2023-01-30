@@ -155,6 +155,7 @@ def loginSpotify():
     auth_url = sp_oauth.get_authorize_url()  # Get the URL that Spotify API Opens Automatically
     code = request.args.get("code")          # fetch for the code inside that auth_url.
     token_info = sp_oauth.get_access_token(code)
+
     session[TOKEN_INFO] = token_info
     return token_info
 
@@ -219,34 +220,53 @@ def add_song_to_playlist():
 
     token_info = get_token()
     headers = {
-        "Authorization": "Bearer " + token_info["access_token"],
+        "Authorization": "Bearer {}".format(token_info["access_token"]),
         "Content-Type": "application/json"
     }
-
+    # body of new playlist to be created
     body = {
         "name": playlist_name,
         "description": "Imported songs from Youtube Playlist",
         "public": True
     }
+    # Fetch user_id
     user_reponse = requests.get("https://api.spotify.com/v1/me", headers=headers)
     user_id = user_reponse.json()["id"]
 
-    url = f"https://api.spotify.com/v1/users/{user_id}/playlists"
-    response = requests.post(url, headers=headers, json=body)
+    # Check if playlist already exists and store its playlist_id
+    response = requests.get("https://api.spotify.com/v1/me/playlists", headers=headers)
+    existingPlaylists = response.json()["items"]
+    playlist_id = None
+    for item in existingPlaylists:
+        if playlist_name == item["name"]:
+            playlist_id = item["id"]
+            break
+    if not playlist_id:
+        # Create Playlist
+        url = f"https://api.spotify.com/v1/users/{user_id}/playlists"
+        response = requests.post(url, headers=headers, json=body)
 
-    if response.status_code == 201:
-        print(f"Successfully created playlist '{playlist_name}'")
-        playlist_id = response.json()["id"]
-        # Add songs to the playlist
-        add_songs_url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
-        data = {
-            "uris": song_uris
-        }
-        requests.post(add_songs_url, headers=headers, data=data)
-        return "Playlist created and songs added successfully"
-    else:
-        print(f"Failed to create playlist. Error: {response.json()}")
-        return None
+        if response.status_code == 201:
+            print(f"Successfully created playlist '{playlist_name}'")
+            playlist_id = response.json()["id"]
+            print(playlist_id)
+            print(song_uris)
+            
+        else:
+            print(f"Failed to create playlist. Error: {response.json()}")
+            return None
+        
+    # Add songs to the playlist
+    add_songs_url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+    data = {
+        "uris": song_uris
+    }
+    response = requests.post(add_songs_url, headers=headers, json=data)
+    # check for valid response status
+    if response.status_code != 200:
+        return f"Response gave status code {response.status_code}" #Created Playlist but not added songs
+    return "Playlist created and songs added successfully"
+    
 
 
 # Create Spotify OAuth Object
@@ -256,7 +276,7 @@ def create_spotify_oauth():
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         redirect_uri='http://localhost:3000/Spotify',
-        scope="user-library-read streaming user-read-email user-read-private user-library-modify user-read-playback-state user-modify-playback-state"
+        scope="user-library-read user-library-modify streaming app-remote-control user-read-email user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"
     )
 
 
