@@ -20,11 +20,10 @@ function TransferPlaylist() {
 
   // Spotify API Variables
   const [accessToken, setAccessToken] = useState(null);
-  // const [spotifyItems, setSpotifyItems] = useState([]); // For logging/debug purposes. Extracted Spotify Song List URI after Yt -> Spotify conversion
-  const [transferButton, setTransferButton] = useState(
-    "Transfer This Playlist to Spotify"
-  );
+  const [spotifyItems, setSpotifyItems] = useState([]); // For logging/debug purposes. Extracted Spotify Song List URI after Yt -> Spotify conversion
+  const [transfer, setTransfer] = useState("Transfer Playlist");
   const [isSuccessButton, setIsSuccessButton] = useState("btn btn-success");
+  const [existingPlaylists, setExistingPlaylists] = useState([]);
 
   function chooseAlbum(album) {
     setSelectedPlayList(album);
@@ -83,26 +82,52 @@ function TransferPlaylist() {
       }
     });
   }
+  async function getSpotifyPlaylists() {
+    try {
+      const response = await Axios.get("/getSpotifyPlaylists");
+      console.log(response.data);
+      setExistingPlaylists(
+        response.data.existing_playlists.map((playlist) => {
+          const smallestAlbumImage = playlist.images.reduce(
+            (smallest, image) => {
+              if (image.height < smallest.height) return image;
+              return smallest; // whatever is returned will be the new accumulator for next iteration (reduce)
+            },
+            playlist.images[0] // starting point (reduce)
+          );
+          return {
+            // return for map
+            name: playlist.name,
+            id: playlist.id,
+            thumbnail: smallestAlbumImage.url
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  async function addSongsToPlaylist() {
-    const spotifyItems = await transferPlaylistToSpotify();
+  async function addSongsToPlaylist(playlistName) {
+    const spotifyItemsPromises = await transferPlaylistToSpotify();
     Promise.all(
-      spotifyItems.map((promise) => promise.then((item) => item))
+      spotifyItemsPromises.map((promise) => promise.then((item) => item))
     ).then((items) => {
+      setSpotifyItems(items);
       console.log(items);
-      setTransferButton(". . . Transferring . . .");
+      setTransfer(". . . Transferring . . .");
       Axios.post("/addSongsToPlaylist", {
         songs: items,
-        playlist_name: "Imported Youtube Playlist"
+        playlist_name: playlistName
       })
         .then((response) => {
           console.log(response.data);
-          setTransferButton("Success!");
+          setTransfer("Success!");
           setIsSuccessButton("btn btn-success");
         })
         .catch((error) => {
-          console.error(error);
-          setTransferButton("Failed! Check Console.");
+          console.log(error.response.data.error);
+          setTransfer("Failed! Check Console.");
           setIsSuccessButton("btn btn-danger");
         });
     });
@@ -112,6 +137,10 @@ function TransferPlaylist() {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken); // Set accessToken to spotifyApi for song search
   }, [accessToken]); // Only get accessToken when clicked on TransferPlaylist Button
+
+  // useEffect(() => {
+  //   console.log(existingPlaylists);
+  // }, [existingPlaylists]); // Only get accessToken when clicked on TransferPlaylist Button
 
   // Fetch Videos Within Playlist
   useEffect(() => {
@@ -123,7 +152,6 @@ function TransferPlaylist() {
             playlistId: selectedPlayList.playlistId
           }
         });
-        // console.log(response.data);
         setChoosenPlaylistItems(
           response.data.response.items.map((video) => {
             const videoThumbnail = video.snippet.thumbnails.high;
@@ -206,33 +234,35 @@ function TransferPlaylist() {
                 <VideoResults video={video} key={video.id} />
               )
             )}
-            {/* Automatically convert all songs into spotify playlist */}
-            {/* {transferPlaylistToSpotify()} */}
-            {/* {spotifyItems.length !== 0 && (
-              <div>
-                {spotifyItems.map((item) =>
-                  <TransferModal song={item} key={item.key} />
-                )}
-              </div>
-            )} */}
+            {existingPlaylists.length !== 0 && (
+              <TransferModal
+                playlists={existingPlaylists}
+                transferButton={transfer}
+                successButton={isSuccessButton}
+                transfer={addSongsToPlaylist}
+              />
+            )}
           </div>
         )}
       </div>
       {selectedPlayList && (
-        <input
-          type='button'
-          className={isSuccessButton}
-          value={transferButton}
-          style={{
-            maxHeight: "38px",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center"
-          }}
-          onClick={() => {
-            addSongsToPlaylist();
-          }}
-        ></input>
+        <>
+          <input
+            type='button'
+            className='btn btn-success'
+            value='Choose Playlist'
+            style={{
+              maxHeight: "38px",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center"
+            }}
+            onClick={() => {
+              // addSongsToPlaylist();
+              getSpotifyPlaylists();
+            }}
+          ></input>
+        </>
       )}
     </Container>
   );

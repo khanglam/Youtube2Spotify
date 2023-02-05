@@ -213,10 +213,35 @@ def get_spotify_uri(song_name, artist):
 
     return uri
 
+@app.route("/getSpotifyPlaylists", methods=['GET'])
+def get_spotify_playlists():
+    token_info = get_token()
+    headers = {
+        "Authorization": "Bearer {}".format(token_info["access_token"]),
+        "Content-Type": "application/json"
+    }
+
+    response = requests.get("https://api.spotify.com/v1/me/playlists?limit=50", headers=headers)
+    existingPlaylists = response.json()["items"]
+    return {"existing_playlists": existingPlaylists}
+
 @app.route("/addSongsToPlaylist", methods=['POST'])
 def add_song_to_playlist():
     songs = request.json['songs']
     playlist_name = request.json['playlist_name']
+
+    token_info = get_token()
+    headers = {
+        "Authorization": "Bearer {}".format(token_info["access_token"]),
+        "Content-Type": "application/json"
+    }
+    # body of new playlist to be created
+    body = {
+        "name": playlist_name,
+        "description": "Imported songs from Youtube Playlist",
+        "public": True
+    }
+
 
     try:
         token_info = get_token()
@@ -235,7 +260,7 @@ def add_song_to_playlist():
         user_id = user_reponse.json()["id"]
 
         # Check if playlist already exists and store its playlist_id
-        response = requests.get("https://api.spotify.com/v1/me/playlists", headers=headers)
+        response = requests.get("https://api.spotify.com/v1/me/playlists?limit=50", headers=headers)
         existingPlaylists = response.json()["items"]
         playlist_id = None
         is_playlist_created_messsage = None
@@ -256,8 +281,8 @@ def add_song_to_playlist():
                 playlist_id = response.json()["id"]
                 
             else:
-                is_playlist_created_messsage = f"Failed to create playlist. Error: {response.status_code}"
-                return is_playlist_created_messsage
+                is_playlist_created_messsage = f"Failed to create playlist: {playlist_name}. Error Code: {response.status_code}"
+                raise Exception(is_playlist_created_messsage)
             
         # Get playlist items and Add to playlist has the same endpoint
         playlist_url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
@@ -288,7 +313,7 @@ def add_song_to_playlist():
             is_song_added_messsage = "No songs were added. Perhaps because these songs already exist"
             return jsonify({
                 "is_playlist_created_messsage": is_playlist_created_messsage,
-                "is_song_added_messsage": is_song_added_messsage
+                "is_song_added_messsage": is_song_added_messsage,
             })
         # Otherwise, add songs to the playlist
         data = {
@@ -298,12 +323,13 @@ def add_song_to_playlist():
         # check for valid response status
         if response.status_code != 201:
             is_song_added_messsage = f"Failed to add songs. Error:  {response.status_code}" # Created Playlist but not added songs
+            raise Exception(is_playlist_created_messsage+". "+is_song_added_messsage)
         else: 
             is_song_added_messsage =  f"Successfully added {len(songs)} songs."
         
         return jsonify({
             "is_playlist_created_messsage": is_playlist_created_messsage,
-            "is_song_added_messsage": is_song_added_messsage
+            "is_song_added_messsage": is_song_added_messsage,
         })
     
     except Exception as e:

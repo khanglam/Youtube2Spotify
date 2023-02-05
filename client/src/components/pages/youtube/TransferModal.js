@@ -1,26 +1,21 @@
-import React from "react";
+import { React, useState } from "react";
 import ReactDom from "react-dom";
 
-const STYLE = {
+const CONTAINER_STYLE = {
   position: "fixed",
   display: "flex",
-  // height: "10%",
-  // width: "10%",
+  flexDirection: "column",
   border: "1px solid red",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
   backgroundColor: "#FFF",
-  padding: "50px",
-  zIndex: 1000
+  padding: "30px",
+  zIndex: 1000,
+  height: "85vh",
+  width: "50vw"
 };
-// position: "fixed",
-// top: "50%",
-// left: "50%",
-// transform: "translate(-50%, -50%)",
-// backgroundColor: "#FFF",
-// padding: "50px",
-// zIndex: 1000
+
 const OVERLAY_STYLE = {
   position: "fixed",
   display: "flex",
@@ -34,30 +29,82 @@ const OVERLAY_STYLE = {
   zIndex: 1000
 };
 
-export default function TransferModal({ song }) {
+const ITEM_STYLE = {
+  display: "flex",
+  alignItems: "center",
+  marginBottom: "5px",
+  cursor: "pointer",
+  border: "1px solid black"
+};
+
+export default function TransferModal({
+  playlists,
+  transfer,
+  transferButton,
+  successButton
+}) {
+  const [selectedPlaylistName, setSelectedPlaylistName] = useState(null);
+
+  function selectPlaylist(playlistName) {
+    setSelectedPlaylistName(playlistName);
+  }
+  function handleTransfer() {
+    transfer(selectedPlaylistName);
+  }
+
+  if (!playlists) {
+    return null;
+  }
   return ReactDom.createPortal(
     <>
       <div style={OVERLAY_STYLE} />
-      <div style={STYLE}>
-        <img src={song.thumbnail} style={{ height: "128px", width: "128px" }} />
-        <div
-          className='text-center ml-3'
+      <div style={CONTAINER_STYLE}>
+        <div style={{ overflowY: "auto" }}>
+          {playlists.map((playlist) => (
+            <div
+              key={playlist.id}
+              style={{
+                ...ITEM_STYLE,
+                backgroundColor:
+                  playlist.name === selectedPlaylistName
+                    ? "rgb(144, 238, 144)"
+                    : null
+              }}
+              onClick={() => selectPlaylist(playlist.name)}
+            >
+              <img
+                src={playlist.thumbnail}
+                style={{ height: "64px", width: "64px" }}
+              />
+              <div
+                className='text-center ml-3'
+                style={{
+                  whiteSpace: "pre",
+                  fontFamily: "Comic Sans",
+                  fontSize: "25px"
+                }}
+              >
+                <div>{playlist.name}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <input
+          type='button'
+          className={successButton}
+          value={transferButton}
           style={{
-            whiteSpace: "pre",
-            fontFamily: "Comic Sans",
-            fontSize: "25px"
+            maxHeight: "38px",
+            marginTop: "10px",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center"
           }}
-        >
-          <div>{song.title}</div>
-        </div>
+          onClick={() => {
+            handleTransfer();
+          }}
+        ></input>
       </div>
-      {/* <div className='d-flex m-2 align-items-center' style={STYLE}>
-        <img src={track.albumUrl} style={{ height: "64px", width: "64px" }} />
-        <div className='ml-3'>
-          <div>{track.title}</div>
-          <div className='text-muted'>{track.artist}</div>
-        </div>
-      </div> */}
     </>,
     document.getElementById("portal")
   );
