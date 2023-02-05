@@ -34,23 +34,23 @@ function Youtube() {
             display: "flex",
             justifyContent: "space-evenly",
             alignItems: "center",
-            flexDirection: "column"
+            flexDirection: "column",
           }}
         >
           {!streamMusic && !transferPlaylist && (
             <>
-              <input
-                value='Stream Music'
-                type='button'
-                className='btn btn-danger btn-lg'
+              {/* <input
+                value="Stream Music"
+                type="button"
+                className="btn btn-danger btn-lg"
                 onClick={() => {
                   setStreamMusic(true);
                 }}
-              ></input>
+              ></input> */}
               <input
-                value='Transfer Playlist'
-                type='button'
-                className='btn btn-danger btn-lg'
+                value="Transfer Playlist"
+                type="button"
+                className="btn btn-danger btn-lg"
                 onClick={() => {
                   setTransferPlaylist(true);
                 }}
@@ -58,7 +58,7 @@ function Youtube() {
             </>
           )}
 
-          {streamMusic && (
+          {/* {streamMusic && (
             <UserChannelInfo.Provider value={userChannel}>
               <Container className='d-flex justify-content-center'>
                 <input
@@ -77,19 +77,19 @@ function Youtube() {
                 ></input>
               </Container>
             </UserChannelInfo.Provider>
-          )}
+          )} */}
           {transferPlaylist && (
             <UserChannelInfo.Provider value={userChannel}>
-              <Container className='d-flex justify-content-center'>
+              <Container className="d-flex justify-content-center">
                 <input
-                  type='button'
-                  className='m-3 btn btn-danger'
-                  value='Back'
+                  type="button"
+                  className="m-3 btn btn-danger"
+                  value="Back"
                   style={{
                     maxHeight: "38px",
                     justifyContent: "center",
                     alignItems: "center",
-                    textAlign: "center"
+                    textAlign: "center",
                   }}
                   onClick={() => {
                     setTransferPlaylist(false);
@@ -102,18 +102,18 @@ function Youtube() {
         </Container>
       ) : (
         <Container
-          className='d-flex justify-content-center align-items-center'
+          className="d-flex justify-content-center align-items-center"
           style={{
-            minHeight: "90vh"
+            minHeight: "90vh",
           }}
         >
           <input
             onClick={handleSubmit}
-            className='btn btn-danger btn-lg'
-            id='submit'
-            name='submit'
-            type='submit'
-            value='Login With YouTube'
+            className="btn btn-danger btn-lg"
+            id="submit"
+            name="submit"
+            type="submit"
+            value="Login With YouTube"
           ></input>
         </Container>
       )}
