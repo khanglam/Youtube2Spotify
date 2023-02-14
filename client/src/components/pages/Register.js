@@ -19,7 +19,7 @@ export const Register = () => {
     setIsSubmit(true);
 
     try {
-      if (Object.keys(errors).length == 0) {
+      if (Object.keys(errors).length === 0) {
         const response = await Axios.post(REGISTER_URL, formValues);
         setfailureMessage(""); // Clear the error message
         setSuccessMessage(response.data);
@@ -78,7 +78,7 @@ export const Register = () => {
         )}
       </div>
       <div>
-        {successMessage != "" ? (
+        {successMessage !== "" ? (
           <div class="alert alert-success">{successMessage}</div>
         ) : (
           <div></div>

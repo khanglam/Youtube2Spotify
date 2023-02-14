@@ -1,1 +1,7 @@
 ﻿*.pyc
+node_modules
+package-lock.json
+server/venv
+*.env
+server/yt_client_secrets.json
+server/token.pickle

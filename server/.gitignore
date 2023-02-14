@@ -1,0 +1,5 @@
+﻿*.pyc
+/venv
+*.env
+yt_client_secrets.json
+token.pickle
