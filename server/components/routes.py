@@ -338,10 +338,10 @@ def add_song_to_playlist():
 # Create Spotify OAuth Object
 def create_spotify_oauth():
     return SpotifyOAuth(
-        show_dialog=True,
+        # show_dialog=True,
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
-        redirect_uri='http://localhost:3000/Spotify',
+        redirect_uri= os.environ.get("SPOTIFY_REDIRECT_URL", "http://localhost:3000"),
         scope="user-library-read user-library-modify streaming app-remote-control user-read-email user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"
     )
 
