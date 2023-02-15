@@ -1,15 +1,10 @@
 # from crypt import methods
-from distutils.log import error
-from lib2to3.pgen2 import token
-from flask_cors import CORS, cross_origin
-import json
 import os
 from flask import jsonify, render_template, url_for, flash, redirect, request, session
 from components import app, db, bcrypt
 from components.forms import RegistrationForm, LoginForm
-from components.models import User, Post
+from components.models import User
 from flask_login import login_user, logout_user, current_user, login_required
-import base64
 
 # Spotify Libraries
 from spotipy.oauth2 import SpotifyOAuth

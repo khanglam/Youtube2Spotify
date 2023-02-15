@@ -4,7 +4,7 @@ import { UserContext } from '../UserContext';
 import { NavLink } from 'react-router-dom';
 
 function Login() {
-  const initialValues = { username: '', password: '', remember_me: false };
+  const initialValues = { username: '', password: '', remember_me: true };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -21,7 +21,9 @@ function Login() {
 
     try {
       if (Object.keys(errors).length === 0) {
+        console.log(process.env.REACT_APP_BACKEND_URL + LOGIN_URL);
         const response = await Axios.post(LOGIN_URL, formValues);
+        window.location.href = '/home';
         setIsLoggedIn(true);
       }
     } catch (error) {
