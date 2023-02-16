@@ -137,9 +137,9 @@ def account():
 # ─██████████████─██████─────────██████████████─────██████─────██████████─██████───────────────██████───────
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-CLIENT_ID = os.environ["CLIENT_ID"]
-CLIENT_SECRET = os.environ["CLIENT_SECRET"]
-GENIUS_ACCESS_TOKEN = os.environ["GENIUS_ACCESS_TOKEN"]
+CLIENT_ID = os.environ.get("CLIENT_ID")
+CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+GENIUS_ACCESS_TOKEN = os.environ.get("GENIUS_ACCESS_TOKEN")
 
 # Initial Spotify Login Authentication.
 TOKEN_INFO = "token_info"
