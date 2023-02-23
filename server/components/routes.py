@@ -1,5 +1,6 @@
 # from crypt import methods
 import os
+import json
 from flask import jsonify, render_template, url_for, flash, redirect, request, session
 from components import app, db, bcrypt
 from components.forms import RegistrationForm, LoginForm
@@ -10,6 +11,8 @@ from flask_login import login_user, logout_user, current_user, login_required
 from spotipy.oauth2 import SpotifyOAuth
 import lyricsgenius as lg
 import requests
+from spotipy.cache_handler import MemoryCacheHandler
+import spotipy
 
 # Youtube API Libraries
 import pickle #library to store/load bytes file
@@ -152,6 +155,7 @@ def loginSpotify():
     token_info = sp_oauth.get_access_token(code)
 
     session[TOKEN_INFO] = token_info
+
     return token_info
 
 # Function to check if token has expired and refresh if needed.
@@ -332,12 +336,17 @@ def add_song_to_playlist():
 
 # Create Spotify OAuth Object
 def create_spotify_oauth():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    # cache_handler= MemoryCacheHandler(
+    #     token_info=TOKEN_INFO
+    # )
     return SpotifyOAuth(
-        show_dialog=True,
+        show_dialog=False,
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         redirect_uri= os.environ.get("SPOTIFY_REDIRECT_URL", "http://localhost:3000"),
-        scope="user-library-read user-library-modify streaming app-remote-control user-read-email user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"
+        scope="user-library-read user-library-modify streaming app-remote-control user-read-email user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public",
+        cache_handler=cache_handler
     )
 
 
