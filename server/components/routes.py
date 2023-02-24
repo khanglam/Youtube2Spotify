@@ -369,8 +369,7 @@ api_version = "v3"
 client_secrets_file = "yt_client_secrets.json"
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
-# Get credentials and create an API client
-@app.route("/loginYoutube", methods=['GET'])
+# Get credentials and create an API client (THIS METHOD IS DEPRECATED AS OF LATE 2022)
 def get_youtube_client():
     credentials = None
     if os.path.exists('token.pickle'):
