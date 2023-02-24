@@ -1,7 +1,4 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Login from "./pages/Login";
-import { Register } from "./pages/Register";
 import "./WelcomePage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -32,10 +29,10 @@ import {
 function WelcomePage(props) {
   return (
     <>
-      <div className='container-fluid'>{props.children}</div>
+      <div className="container-fluid">{props.children}</div>
       <section>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -57,53 +54,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-        </div>
-        <div class='row'>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -126,8 +77,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -149,53 +100,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-        </div>
-        <div class='row'>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -218,8 +123,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -241,53 +146,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-        </div>
-        <div class='row'>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -310,8 +169,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -333,53 +192,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-        </div>
-        <div class='row'>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -402,8 +215,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -425,53 +238,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-        </div>
-        <div class='row'>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -494,8 +261,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -517,53 +284,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-        </div>
-        <div class='row'>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -586,8 +307,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -609,53 +330,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-        </div>
-        <div class='row'>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -678,8 +353,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -701,53 +376,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-        </div>
-        <div class='row'>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -770,8 +399,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -793,53 +422,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-        </div>
-        <div class='row'>
-          <div class='icons'>
-            <FontAwesomeIcon icon={faLinkedin} />
-            <FontAwesomeIcon icon={faJenkins} />
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faCommenting} />
-            <FontAwesomeIcon icon={faJava} />
-            <FontAwesomeIcon icon={faEnvelope} />
-            <FontAwesomeIcon icon={faTwitch} />
-            <FontAwesomeIcon icon={faApple} />
-            <FontAwesomeIcon icon={faAndroid} />
-            <FontAwesomeIcon icon={faFirefox} />
-            <FontAwesomeIcon icon={faYoutube} />
-            <FontAwesomeIcon icon={faGithub} />
-            <FontAwesomeIcon icon={faCode} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faPython} />
-            <FontAwesomeIcon icon={faSnapchat} />
-            <FontAwesomeIcon icon={faChrome} />
-            <FontAwesomeIcon icon={faWindows} />
-            <FontAwesomeIcon icon={faInternetExplorer} />
-            <FontAwesomeIcon icon={faFacebook} />
-          </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -862,8 +445,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -885,7 +468,7 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -908,8 +491,8 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faFacebook} />
           </div>
         </div>
-        <div class='row'>
-          <div class='icons'>
+        <div class="row">
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />
@@ -931,7 +514,421 @@ function WelcomePage(props) {
             <FontAwesomeIcon icon={faInternetExplorer} />
             <FontAwesomeIcon icon={faFacebook} />
           </div>
-          <div class='icons'>
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icons">
+            <FontAwesomeIcon icon={faLinkedin} />
+            <FontAwesomeIcon icon={faJenkins} />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faCommenting} />
+            <FontAwesomeIcon icon={faJava} />
+            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faTwitch} />
+            <FontAwesomeIcon icon={faApple} />
+            <FontAwesomeIcon icon={faAndroid} />
+            <FontAwesomeIcon icon={faFirefox} />
+            <FontAwesomeIcon icon={faYoutube} />
+            <FontAwesomeIcon icon={faGithub} />
+            <FontAwesomeIcon icon={faCode} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faPython} />
+            <FontAwesomeIcon icon={faSnapchat} />
+            <FontAwesomeIcon icon={faChrome} />
+            <FontAwesomeIcon icon={faWindows} />
+            <FontAwesomeIcon icon={faInternetExplorer} />
+            <FontAwesomeIcon icon={faFacebook} />
+          </div>
+          <div class="icons">
             <FontAwesomeIcon icon={faLinkedin} />
             <FontAwesomeIcon icon={faJenkins} />
             <FontAwesomeIcon icon={faInstagram} />

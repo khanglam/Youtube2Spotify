@@ -1,12 +1,12 @@
-import axios from "axios";
+import axios from 'axios';
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 export default axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
   headers: {
-    "Content-Type": "application/json"
+    'Content-Type': 'application/json'
   }
 });
 
@@ -14,6 +14,6 @@ export default axios.create({
 export const AxiosYT = axios.create({
   baseURL: BASE_URL,
   headers: {
-    "Content-Type": "application/json"
+    'Content-Type': 'application/json'
   }
 });

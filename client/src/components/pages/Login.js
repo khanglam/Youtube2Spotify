@@ -1,10 +1,10 @@
-import { React, useState, useEffect, useRef, useContext } from "react";
-import Axios from "../Axios";
-import { UserContext } from "../UserContext";
-import { NavLink } from "react-router-dom";
+import { React, useState, useEffect, useRef, useContext } from 'react';
+import Axios from '../Axios';
+import { UserContext } from '../UserContext';
+import { NavLink } from 'react-router-dom';
 
 function Login() {
-  const initialValues = { username: "", password: "", remember_me: false };
+  const initialValues = { username: '', password: '', remember_me: true };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -12,7 +12,7 @@ function Login() {
   const focusUserName = useRef(false);
   const { setIsLoggedIn } = useContext(UserContext);
 
-  const LOGIN_URL = "/login";
+  const LOGIN_URL = '/login';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,17 +21,18 @@ function Login() {
 
     try {
       if (Object.keys(errors).length === 0) {
+        console.log(process.env.REACT_APP_BACKEND_URL + LOGIN_URL);
         const response = await Axios.post(LOGIN_URL, formValues);
+        window.location.href = '/home';
         setIsLoggedIn(true);
-        window.location.href = "/home";
       }
     } catch (error) {
-      if (error.message === "Network Error") {
-        setFormErrors({ formErrors, connection: "No Server Response" });
+      if (error.message === 'Network Error') {
+        setFormErrors({ formErrors, connection: 'No Server Response' });
       } else if (error.response?.status === 401) {
         setFormErrors(error.response.data);
       } else {
-        setFormErrors({ formErrors, connection: "Login Failed" });
+        setFormErrors({ formErrors, connection: 'Login Failed' });
       }
       focusUserName.current.focus();
     }
@@ -51,14 +52,14 @@ function Login() {
   const validate = (values) => {
     const errors = {};
     if (!values.username) {
-      errors.username = "Username is required!";
+      errors.username = 'Username is required!';
     }
     if (!values.password) {
-      errors.password = "Password is required!";
+      errors.password = 'Password is required!';
     } else if (values.password.length < 4) {
-      errors.password = "Too Short!";
+      errors.password = 'Too Short!';
     } else if (values.password.length > 10) {
-      errors.password = "Too Long!";
+      errors.password = 'Too Long!';
     }
     setFormErrors(errors);
     return errors;

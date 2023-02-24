@@ -26,7 +26,7 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await Axios.get("/@me");
+        await Axios.get("/@me");
         setIsLoggedIn(true);
       } catch (error) {
         if (error.response?.status === 401) {
@@ -48,11 +48,11 @@ function App() {
             <Route path={["/home", "/about", "spotify", "/youtube", "/logout"]}>
               <Layout>
                 <Switch>
-                  <Route path='/home' component={Home} />
-                  <Route path='/about' component={About} />
-                  <Route path='/spotify' component={Spotify} />
-                  <Route path='/youtube' component={Youtube} />
-                  <Route path='/logout' component={logOut} />
+                  <Route path="/home" component={Home} />
+                  <Route path="/about" component={About} />
+                  <Route path="/spotify" component={Spotify} />
+                  <Route path="/youtube" component={Youtube} />
+                  <Route path="/logout" component={logOut} />
                 </Switch>
               </Layout>
             </Route>
@@ -60,19 +60,19 @@ function App() {
               {isLoggedIn ? (
                 <Layout>
                   <Switch>
-                    <Route exact path='/' component={Home} />
-                    <Route path='/about' component={About} />
-                    <Route path='/spotify' component={Spotify} />
-                    <Route path='/logout' component={logOut} />
+                    <Route exact path="/" component={Home} />
+                    <Route path="/about" component={About} />
+                    <Route path="/spotify" component={Spotify} />
+                    <Route path="/logout" component={logOut} />
                     <Route component={NoMatch} />
                   </Switch>
                 </Layout>
               ) : (
                 <WelcomePage>
                   <Switch>
-                    <Route exact path='/' component={Login} />
-                    <Route path='/login' component={Login} />
-                    <Route path='/register' component={Register} />
+                    <Route exact path="/" component={Login} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/register" component={Register} />
                     <Route component={Login} />
                   </Switch>
                 </WelcomePage>
