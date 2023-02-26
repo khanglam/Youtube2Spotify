@@ -16,10 +16,11 @@ import spotipy
 
 # Youtube API Libraries
 import pickle #library to store/load bytes file
+import google_auth_oauthlib.flow
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
-# from google.oauth2.credentials import credentials
+from google.oauth2.credentials import Credentials
 from google.auth.exceptions import RefreshError
 import youtube_dl
 
@@ -369,8 +370,9 @@ api_version = "v3"
 client_secrets_file = "yt_client_secrets.json"
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
-# Get credentials and create an API client (THIS METHOD IS DEPRECATED AS OF LATE 2022)
-def get_youtube_client():
+# (THIS FUNCTION IS DEPRECATED)
+# Get credentials and create an API client 
+def get_youtube_client_deprecated():
     credentials = None
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token: # rb - read bytes
@@ -385,14 +387,14 @@ def get_youtube_client():
                 print('...FAILED to Refresh Access Token...')
                 print('...Fetching New Tokens...')
                 flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file,scopes)
-                flow.run_local_server(port=3000, prompt='consent', authorization_prompt_message='') #prompt=consent is the fix for refresh token solution.
+                flow.run_local_server(port=3000, prompt='consent', authorization_prompt_message='') #This is for local only
                 credentials = flow.credentials
                 credentials.refresh
         else:
             print('...Fetching New Tokens...')
             flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file,scopes)
-            flow.run_local_server(port=3000, prompt='consent', authorization_prompt_message='') #prompt=consent is the fix for refresh token solution.
-            # flow.run_console() #- Deprecated and is no longer supported. Check out https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html?m=1#disallowed-oob
+            flow.run_local_server(port=3000, prompt='consent', authorization_prompt_message='') #This is for localhost only
+            # flow.run_console() # - Deprecated and is no longer supported. Check out https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html?m=1#disallowed-oob
             credentials = flow.credentials
             credentials.refresh
             
@@ -404,6 +406,92 @@ def get_youtube_client():
     youtube_client = build(api_service_name, api_version, credentials=credentials)
     return youtube_client
 
+@app.route('/getToken', methods=['GET'])
+def get_youtube_client():
+    print("GET TOKEN!!!!!!!!")
+    print(session)
+    if 'credentials' not in session:
+        return redirect('authorize')
+
+    # Load credentials from the session.
+    credentials = Credentials(
+        **session['credentials'])
+
+    youtube_client = build(api_service_name, api_version, credentials=credentials)
+
+    # Save credentials back to session in case access token was refreshed.
+    # ACTION ITEM: In a production app, you likely want to save these
+    #              credentials in a persistent database instead.
+    session['credentials'] = credentials_to_dict(credentials)
+    print("################################################")
+    print(session['credentials'])
+
+    return youtube_client
+@app.route('/authorize')
+def authorize():
+    print("AUTHORIZE!")
+    # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        client_secrets_file, scopes=scopes)
+    # The URI created here must exactly match one of the authorized redirect URIs
+    # for the OAuth 2.0 client, which you configured in the API Console. If this
+    # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
+    # error.
+    flow.redirect_uri = url_for('ytcallback', _external=True)
+    authorization_url, state = flow.authorization_url(
+        # Enable offline access so that you can refresh an access token without
+        # re-prompting the user for permission. Recommended for web server apps.
+        access_type='offline',
+        # Enable incremental authorization. Recommended as a best practice.
+        include_granted_scopes='true')
+
+    # Store the state so the callback can verify the auth server response.
+    session['state'] = state
+    return redirect(authorization_url)
+
+@app.route('/ytcallback')
+def ytcallback():
+  # Specify the state when creating the flow in the callback so that it can
+  # verified in the authorization server response.
+  # state - randomly generated 'value' in response to correspond to the request 'key' for better security
+  state = session['state']
+
+  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+      client_secrets_file, scopes=scopes, state=state)
+  flow.redirect_uri = url_for('ytcallback', _external=True)
+
+  # Use the authorization server's response to fetch the OAuth 2.0 tokens.
+  authorization_response = request.url
+  print(authorization_response)
+  flow.fetch_token(authorization_response=authorization_response)
+
+  # Store credentials in the session.
+  # TODO: store credentials in a database instead.
+  credentials = flow.credentials
+  session['credentials'] = credentials_to_dict(credentials)
+
+  return redirect(url_for('get_youtube_client'))
+
+@app.route('/logoutYt')
+def clear_credentials():
+    print(session)
+    if 'credentials' in session:
+        del session['credentials']
+    return "Cleared Session for Youtube"
+
+@app.route('/session')
+def session():
+    print(session)
+    return "Hello"
+
+def credentials_to_dict(credentials):
+  return {'token': credentials.token,
+          'refresh_token': credentials.refresh_token,
+          'token_uri': credentials.token_uri,
+          'client_id': credentials.client_id,
+          'client_secret': credentials.client_secret,
+          'scopes': credentials.scopes}
+
 @app.route("/getYtPlaylist", methods=['GET', 'POST'])
 def get_yt_playlist():
     youtube_client = get_youtube_client()
@@ -414,6 +502,7 @@ def get_yt_playlist():
     )
     response = request.execute()
     return response
+
 
 @app.route("/getYtChannel", methods=['GET'])
 def get_yt_channelInfo():

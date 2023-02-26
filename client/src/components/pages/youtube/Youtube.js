@@ -1,47 +1,28 @@
-import { React, useState, useEffect } from 'react';
-import { Container } from 'react-bootstrap';
-import { AxiosYT } from '../../Axios';
-import TransferPlaylist from './TransferPlaylist';
+import { React, useState, useEffect } from "react";
+import { Container } from "react-bootstrap";
+import { AxiosYT } from "../../Axios";
+import TransferPlaylist from "./TransferPlaylist";
 
-import { UserChannelInfo } from './UserChannel';
+import { UserChannelInfo } from "./UserChannel";
 
-const LOGIN_URL = '/getYtChannel';
+const LOGIN_URL = "/getToken";
 const YT_CLIENT_ID = process.env.REACT_APP_YT_CLIENT_ID;
 const YT_SCOPES = process.env.REACT_APP_YT_SCOPES;
 
 function Youtube() {
   const [userChannel, setUserChannel] = useState(null);
-  const [tokenClient, setTokenClient] = useState({});
 
   // To toggle which option to render
   const [streamMusic, setStreamMusic] = useState(false);
   const [transferPlaylist, setTransferPlaylist] = useState(false);
 
-  useEffect(() => {
-    // If we don't have this global google comment, the Linter will give compilation error
-    /* global google */
-
-    // Get and set tokenClient
-    setTokenClient(
-      google.accounts.oauth2.initTokenClient({
-        client_id: YT_CLIENT_ID,
-        scope: YT_SCOPES,
-        callback: (tokenResponse) => {
-          console.log(tokenResponse);
-          // We now have access to a live token to use for ANY google API
-          if (tokenResponse && tokenResponse.access_token) {
-          }
-        }
-      })
-    );
-  }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const response = await AxiosYT.get(LOGIN_URL);
+      const response = await AxiosYT.get(LOGIN_URL);
+      console.log(response);
       // setUserChannel(response.data);
-      tokenClient.requestAccessToken();
+      // tokenClient.requestAccessToken();
     } catch (error) {
       console.log(error);
     }
@@ -53,11 +34,11 @@ function Youtube() {
       {userChannel ? (
         <Container
           style={{
-            minHeight: '90vh',
-            display: 'flex',
-            justifyContent: 'space-evenly',
-            alignItems: 'center',
-            flexDirection: 'column'
+            minHeight: "90vh",
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            flexDirection: "column",
           }}
         >
           {!streamMusic && !transferPlaylist && (
@@ -71,9 +52,9 @@ function Youtube() {
                 }}
               ></input> */}
               <input
-                value='Transfer Playlist'
-                type='button'
-                className='btn btn-danger btn-lg'
+                value="Transfer Playlist"
+                type="button"
+                className="btn btn-danger btn-lg"
                 onClick={() => {
                   setTransferPlaylist(true);
                 }}
@@ -103,16 +84,16 @@ function Youtube() {
           )} */}
           {transferPlaylist && (
             <UserChannelInfo.Provider value={userChannel}>
-              <Container className='d-flex justify-content-center'>
+              <Container className="d-flex justify-content-center">
                 <input
-                  type='button'
-                  className='m-3 btn btn-danger'
-                  value='Back'
+                  type="button"
+                  className="m-3 btn btn-danger"
+                  value="Back"
                   style={{
-                    maxHeight: '38px',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center'
+                    maxHeight: "38px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
                   }}
                   onClick={() => {
                     setTransferPlaylist(false);
@@ -125,18 +106,18 @@ function Youtube() {
         </Container>
       ) : (
         <Container
-          className='d-flex justify-content-center align-items-center'
+          className="d-flex justify-content-center align-items-center"
           style={{
-            minHeight: '90vh'
+            minHeight: "90vh",
           }}
         >
           <input
             onClick={handleSubmit}
-            className='btn btn-danger btn-lg'
-            id='submit'
-            name='submit'
-            type='submit'
-            value='Login With YouTube'
+            className="btn btn-danger btn-lg"
+            id="submit"
+            name="submit"
+            type="submit"
+            value="Login With YouTube"
           ></input>
         </Container>
       )}
