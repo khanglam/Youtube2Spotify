@@ -34,7 +34,7 @@ function Spotify() {
     }
   };
 
-  async function clearSpotifyCache() {
+  async function logoutSpotify() {
     try {
       const response = await Axios.get(CLEAR_SPOTIFY_CACHE);
       console.log('Spotify Cache Cleared');
@@ -119,11 +119,11 @@ function Spotify() {
                 }}
               ></input>
               <input
-                value='Clear Cache'
+                value='Logout'
                 type='button'
                 className='btn btn-danger btn-lg'
                 onClick={() => {
-                  clearSpotifyCache();
+                  logoutSpotify();
                 }}
               ></input>
             </Container>
