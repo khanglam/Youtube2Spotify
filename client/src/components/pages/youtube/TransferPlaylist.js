@@ -1,12 +1,12 @@
-import { React, useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
-import Axios from "../../Axios";
-import PlayListResult from "./PlayListResult";
-import VideoResults from "./VideoResults";
-import TransferModal from "./TransferModal";
+import { React, useState, useEffect } from 'react';
+import { Container } from 'react-bootstrap';
+import Axios from '../../Axios';
+import PlayListResult from './PlayListResult';
+import VideoResults from './VideoResults';
+import TransferModal from './TransferModal';
 
 // Spotify API
-import SpotifyWebApi from "spotify-web-api-node";
+import SpotifyWebApi from 'spotify-web-api-node';
 
 const spotifyApi = new SpotifyWebApi({
   // clientId: "2acabd8b4233495ebcd8c55daeb602f0",
@@ -21,8 +21,8 @@ function TransferPlaylist() {
   // Spotify API Variables
   const [accessToken, setAccessToken] = useState(null);
   const [spotifyItems, setSpotifyItems] = useState([]); // For logging/debug purposes. Extracted Spotify Song List URI after Yt -> Spotify conversion
-  const [transfer, setTransfer] = useState("Transfer Playlist");
-  const [isSuccessButton, setIsSuccessButton] = useState("btn btn-success");
+  const [transfer, setTransfer] = useState('Transfer Playlist');
+  const [isSuccessButton, setIsSuccessButton] = useState('btn btn-success');
   const [existingPlaylists, setExistingPlaylists] = useState([]);
 
   function chooseAlbum(album) {
@@ -34,7 +34,7 @@ function TransferPlaylist() {
     return youtubeItems.map(async (item) => {
       if (item.track !== null && item.artist !== null) {
         const searchRes = await spotifyApi.searchTracks(
-          item.track + " " + item.artist
+          item.track + ' ' + item.artist
         );
         const smallestAlbumImage =
           searchRes.body.tracks.items[0].album.images.reduce(
@@ -45,18 +45,18 @@ function TransferPlaylist() {
             searchRes.body.tracks.items[0].album.images[0] // starting point (reduce)
           );
         return {
-          confidence: "high",
+          confidence: 'high',
           title: searchRes.body.tracks.items[0].name,
           artist: searchRes.body.tracks.items[0].artists[0].name,
           uri: searchRes.body.tracks.items[0].uri,
           thumbnail: smallestAlbumImage.url,
-          key: item.video_title,
+          key: item.video_title
         };
       } else {
         const parsedVideoTitle = item.video_title // Attempting to parse video title for better search success
-          .replace(/karaoke/gi, "")
-          .replace(/\[.*\]/, "")
-          .replace(/\(.*\)/, "");
+          .replace(/karaoke/gi, '')
+          .replace(/\[.*\]/, '')
+          .replace(/\(.*\)/, '');
         // If artist and song name is undefined, search by title
         try {
           const searchRes = await spotifyApi.searchTracks(parsedVideoTitle);
@@ -69,22 +69,22 @@ function TransferPlaylist() {
               searchRes.body.tracks.items[0].album.images[0] // starting point (reduce)
             );
           return {
-            confidence: "low",
+            confidence: 'low',
             title: searchRes.body.tracks.items[0].name,
             artist: searchRes.body.tracks.items[0].artists[0].name,
             uri: searchRes.body.tracks.items[0].uri,
             thumbnail: smallestAlbumImage.url,
-            key: item.video_title,
+            key: item.video_title
           };
         } catch {
-          console.log("No Result For: " + parsedVideoTitle);
+          console.log('No Result For: ' + parsedVideoTitle);
         }
       }
     });
   }
   async function getSpotifyPlaylists() {
     try {
-      const response = await Axios.get("/getSpotifyPlaylists");
+      const response = await Axios.get('/getSpotifyPlaylists');
       console.log(response.data);
       setExistingPlaylists(
         response.data.existing_playlists.map((playlist) => {
@@ -99,7 +99,7 @@ function TransferPlaylist() {
             // return for map
             name: playlist.name,
             id: playlist.id,
-            thumbnail: smallestAlbumImage.url,
+            thumbnail: smallestAlbumImage.url
           };
         })
       );
@@ -115,20 +115,20 @@ function TransferPlaylist() {
     ).then((items) => {
       setSpotifyItems(items);
       console.log(items);
-      setTransfer(". . . Transferring . . .");
-      Axios.post("/addSongsToPlaylist", {
+      setTransfer('. . . Transferring . . .');
+      Axios.post('/addSongsToPlaylist', {
         songs: items,
-        playlist_name: playlistName,
+        playlist_name: playlistName
       })
         .then((response) => {
           console.log(response.data);
-          setTransfer("Success!");
-          setIsSuccessButton("btn btn-success");
+          setTransfer('Success!');
+          setIsSuccessButton('btn btn-success');
         })
         .catch((error) => {
           console.log(error.response.data.error);
-          setTransfer("Failed! Check Console.");
-          setIsSuccessButton("btn btn-danger");
+          setTransfer('Failed! Check Console.');
+          setIsSuccessButton('btn btn-danger');
         });
     });
   }
@@ -147,10 +147,10 @@ function TransferPlaylist() {
     (async () => {
       try {
         if (!selectedPlayList) return;
-        const response = await Axios.get("/getYtAlbumSongs", {
+        const response = await Axios.get('/getYtAlbumSongs', {
           params: {
-            playlistId: selectedPlayList.playlistId,
-          },
+            playlistId: selectedPlayList.playlistId
+          }
         });
         setChoosenPlaylistItems(
           response.data.response.items.map((video) => {
@@ -159,7 +159,7 @@ function TransferPlaylist() {
               // return for map
               title: video.snippet.title,
               thumbnail: videoThumbnail.url,
-              videoId: video.id,
+              videoId: video.id
             };
           })
         );
@@ -171,7 +171,7 @@ function TransferPlaylist() {
               track: song.song_name,
               spotify_uri: song.spotify_uri,
               video_title: song.video_title,
-              youtube_url: song.youtube_url,
+              youtube_url: song.youtube_url
             };
           })
         );
@@ -187,10 +187,10 @@ function TransferPlaylist() {
       try {
         setSelectedPlayList(null);
         // Get Spotify Access Token
-        let response = await Axios.get("/loginSpotify");
-        setAccessToken(response.data["access_token"]);
+        let response = await Axios.get('/getSpotifyToken');
+        setAccessToken(response.data['access_token']);
 
-        response = await Axios.get("/getYtPlaylist");
+        response = await Axios.get('/getYtPlaylist');
         setAllPlaylists(
           response.data.items.map((album) => {
             const albumThumbnail = album.snippet.thumbnails.high;
@@ -198,7 +198,7 @@ function TransferPlaylist() {
               // return for map
               title: album.snippet.title,
               thumbnail: albumThumbnail.url,
-              playlistId: album.id,
+              playlistId: album.id
             };
           })
         );
@@ -209,8 +209,8 @@ function TransferPlaylist() {
   }, []); // Only need to load this once
 
   return (
-    <Container className="d-flex flex-column" style={{ height: "90vh" }}>
-      <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
+    <Container className='d-flex flex-column' style={{ height: '90vh' }}>
+      <div className='flex-grow-1 my-2' style={{ overflowY: 'auto' }}>
         {allPlayLists.map((album) => (
           <PlayListResult
             album={album}
@@ -220,11 +220,11 @@ function TransferPlaylist() {
         ))}
         {selectedPlayList && (
           <div
-            className="text-center"
+            className='text-center'
             style={{
-              whiteSpace: "pre",
-              fontFamily: "Comic Sans",
-              fontSize: "25px",
+              whiteSpace: 'pre',
+              fontFamily: 'Comic Sans',
+              fontSize: '25px'
             }}
           >
             {choosenPlaylistItems.map(
@@ -249,14 +249,14 @@ function TransferPlaylist() {
       {selectedPlayList && (
         <>
           <input
-            type="button"
-            className="btn btn-success"
-            value="Choose Playlist"
+            type='button'
+            className='btn btn-success'
+            value='Choose Playlist'
             style={{
-              maxHeight: "38px",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
+              maxHeight: '38px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center'
             }}
             onClick={() => {
               // addSongsToPlaylist();

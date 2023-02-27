@@ -402,7 +402,7 @@ def authorizeYoutube():
     # for the OAuth 2.0 client, which you configured in the API Console. If this
     # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
     # error.
-    flow.redirect_uri = url_for('youtubeCallback', _external=True)
+    flow.redirect_uri = url_for('callback_youtube', _external=True)
  
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -423,7 +423,7 @@ def callback_youtube():
     state = session.get('state')
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         client_secrets_file, scopes=scopes, state=state)
-    flow.redirect_uri = url_for('youtubeCallback', _external=True)
+    flow.redirect_uri = url_for('callback_youtube', _external=True)
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url
@@ -436,8 +436,6 @@ def callback_youtube():
     session['credentials'] = credentials_to_dict(credentials)
 
     return "Authentication complete. You may close this window"
-    # return redirect(url_for('get_yt_channel_info'))
-    # redirect('http://localhost:3000/Youtube')
 
 @app.route("/getYtChannel", methods=['GET'])
 def get_yt_channel_info():
