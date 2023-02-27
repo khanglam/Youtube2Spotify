@@ -13,6 +13,7 @@ import lyricsgenius as lg
 import requests
 from spotipy.cache_handler import MemoryCacheHandler
 import spotipy
+import uuid
 
 # Youtube API Libraries
 import pickle #library to store/load bytes file
@@ -146,37 +147,61 @@ CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 GENIUS_ACCESS_TOKEN = os.environ.get("GENIUS_ACCESS_TOKEN")
 
 # Initial Spotify Login Authentication.
-TOKEN_INFO = "token_info"
+SPOT_TOKEN_INFO = "spotify_token_info"
 
-@app.route("/loginSpotify", methods=['GET'])
-def loginSpotify():
-    sp_oauth = create_spotify_oauth()
-    auth_url = sp_oauth.get_authorize_url()  # Get the URL that Spotify API Opens Automatically
-    code = request.args.get("code")          # fetch for the code inside that auth_url.
-    token_info = sp_oauth.get_access_token(code)
+# Create Spotify OAuth Object
+sp_oauth = SpotifyOAuth(
+    client_id=CLIENT_ID,
+    client_secret=CLIENT_SECRET,
+    redirect_uri= os.environ.get("SPOTIFY_REDIRECT_URL", "http://localhost:5000/spotifyCallback"),
+    scope="user-library-read user-library-modify streaming app-remote-control user-read-email user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"
+)
 
-    session[TOKEN_INFO] = token_info
-
-    return token_info
-
-# Function to check if token has expired and refresh if needed.
-# This function gets called to get token.
-@app.route("/refreshSpotifyToken", methods=['GET'])
-def get_token():
-    token_info = session.get(TOKEN_INFO, None)
+# Function to check if token exists and refresh if expired.
+@app.route("/getSpotifyToken", methods=['GET'])
+def get_spotify_token():
+    token_info = session.get(SPOT_TOKEN_INFO, None)
     if not token_info:
-        return loginSpotify()
+        return authorizeSpotify()
         
     # If token exists, refresh the token
-    sp_oauth = create_spotify_oauth()
     token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
-    session[TOKEN_INFO] = token_info
+    session[SPOT_TOKEN_INFO] = token_info
     return token_info
+
+
+@app.route("/authorizeSpotify")
+def authorizeSpotify():
+    # Generate a unique state value to prevent CSRF attacks
+    state = str(uuid.uuid4())
+    session["spotify_auth_state"] = state
+    # Redirect the user to Spotify's authorization page
+    auth_url = sp_oauth.get_authorize_url(state=state)
+    return auth_url
+
+@app.route('/spotifyCallback')
+def callback_spotify():
+    # Verify the state parameter to prevent CSRF attacks
+    expected_state = session.pop("spotify_auth_state", None)
+    if expected_state is None or expected_state != request.args.get("state"):
+        return jsonify(error="State Mismatch"), 400
+    
+    # Get the authorization code from the query parameters
+    auth_code = request.args.get("code")
+
+    # Exchange the authorization code for an access token
+    token_info = sp_oauth.get_access_token(auth_code)
+
+    # Save the token info to the session
+    session[SPOT_TOKEN_INFO] = token_info
+
+    return "Spotify Authenticated Successfully. You may now close this window."
 
 @app.route("/clearSpotifyCache", methods=['GET'])
 def clearSpotifyCache():
-    sp_oauth = create_spotify_oauth()
     sp_oauth.cache_handler.save_token_to_cache(None)
+    if SPOT_TOKEN_INFO in session:
+        del session[SPOT_TOKEN_INFO]
     return "Cleared"
 
 @app.route("/spotifyLyrics", methods=['GET'])
@@ -192,7 +217,7 @@ def get_spotify_lyrics():
     })
 
 def get_spotify_uri(song_name, artist):
-    token_info = get_token()
+    token_info = get_spotify_token()
     #Search for Song
     query = "https://api.spotify.com/v1/search?q=track%3A{}artist%3A{}&type=track&offset=0&limit=20".format(
         song_name,
@@ -215,7 +240,7 @@ def get_spotify_uri(song_name, artist):
 
 @app.route("/getSpotifyPlaylists", methods=['GET'])
 def get_spotify_playlists():
-    token_info = get_token()
+    token_info = get_spotify_token()
     headers = {
         "Authorization": "Bearer {}".format(token_info["access_token"]),
         "Content-Type": "application/json"
@@ -230,7 +255,7 @@ def add_song_to_playlist():
     songs = request.json['songs']
     playlist_name = request.json['playlist_name']
 
-    token_info = get_token()
+    token_info = get_spotify_token()
     headers = {
         "Authorization": "Bearer {}".format(token_info["access_token"]),
         "Content-Type": "application/json"
@@ -244,7 +269,7 @@ def add_song_to_playlist():
 
 
     try:
-        token_info = get_token()
+        token_info = get_spotify_token()
         headers = {
             "Authorization": "Bearer {}".format(token_info["access_token"]),
             "Content-Type": "application/json"
@@ -335,22 +360,6 @@ def add_song_to_playlist():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Create Spotify OAuth Object
-def create_spotify_oauth():
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    # cache_handler= MemoryCacheHandler(
-    #     token_info=TOKEN_INFO
-    # )
-    return SpotifyOAuth(
-        show_dialog=False,
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
-        redirect_uri= os.environ.get("SPOTIFY_REDIRECT_URL", "http://localhost:3000"),
-        scope="user-library-read user-library-modify streaming app-remote-control user-read-email user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public",
-        cache_handler=cache_handler
-    )
-
-
 # ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ─████████──████████─██████████████─██████──██████─██████████████─██████──██████─██████████████───██████████████─
 # ─██░░░░██──██░░░░██─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██───██░░░░░░░░░░██─
@@ -384,8 +393,8 @@ def get_youtube_client():
     youtube_client = build(api_service_name, api_version, credentials=credentials)
     return youtube_client
 
-@app.route('/authorize')
-def authorize():
+@app.route('/authorizeYoutube')
+def authorizeYoutube():
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         client_secrets_file, scopes=scopes)
@@ -393,7 +402,7 @@ def authorize():
     # for the OAuth 2.0 client, which you configured in the API Console. If this
     # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
     # error.
-    flow.redirect_uri = url_for('ytcallback', _external=True)
+    flow.redirect_uri = url_for('youtubeCallback', _external=True)
  
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -406,15 +415,15 @@ def authorize():
     session['state'] = state
     return authorization_url
 
-@app.route('/ytcallback')
-def ytcallback():
+@app.route('/youtubeCallback')
+def callback_youtube():
     # Specify the state when creating the flow in the callback so that it can
     # verified in the authorization server response.
     # state - randomly generated 'value' in response to correspond to the request 'key' for better security
     state = session.get('state')
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         client_secrets_file, scopes=scopes, state=state)
-    flow.redirect_uri = url_for('ytcallback', _external=True)
+    flow.redirect_uri = url_for('youtubeCallback', _external=True)
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url
@@ -430,21 +439,12 @@ def ytcallback():
     # return redirect(url_for('get_yt_channel_info'))
     # redirect('http://localhost:3000/Youtube')
 
-@app.route("/loginYt", methods=['GET'])
-def loginYoutube():
-    youtube_client = get_youtube_client()
-    # Check if the access token is present in the session.
-    if not youtube_client:
-        return redirect('/authorize')
-
-    return session['credentials']
-
 @app.route("/getYtChannel", methods=['GET'])
 def get_yt_channel_info():
     youtube_client = get_youtube_client()
     # Check if the access token is present in the session.
     if not youtube_client:
-        return redirect('/authorize')
+        return redirect('/authorizeYoutube')
 
     request = youtube_client.channels().list(
         part="snippet,contentDetails,statistics",
@@ -525,8 +525,7 @@ def clear_credentials():
 
 @app.route('/mySession')
 def mySession():
-    mySession = session
-    return jsonify(mySession)
+    return session
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
