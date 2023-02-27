@@ -1,11 +1,14 @@
-import { React, useState } from "react";
-import { Container } from "react-bootstrap";
-import { AxiosYT } from "../../Axios";
-import TransferPlaylist from "./TransferPlaylist";
+import { React, useState, useEffect } from 'react';
+import { Container } from 'react-bootstrap';
+import Axios from '../../Axios';
+import TransferPlaylist from './TransferPlaylist';
 
-import { UserChannelInfo } from "./UserChannel";
+import { UserChannelInfo } from './UserChannel';
 
-const LOGIN_URL = "/getYtChannel";
+const LOGIN_URL = '/getYtChannel';
+// const LOGIN_URL = '/getToken';
+// const YT_CLIENT_ID = process.env.REACT_APP_YT_CLIENT_ID;
+// const YT_SCOPES = process.env.REACT_APP_YT_SCOPES;
 
 function Youtube() {
   const [userChannel, setUserChannel] = useState(null);
@@ -17,8 +20,11 @@ function Youtube() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await AxiosYT.get(LOGIN_URL);
-      setUserChannel(response.data);
+      const response = await Axios.get(LOGIN_URL);
+      console.log(response.data);
+      if (response.data.includes('accounts.google')) {
+        window.open(response.data, '_blank');
+      } else setUserChannel(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -30,11 +36,11 @@ function Youtube() {
       {userChannel ? (
         <Container
           style={{
-            minHeight: "90vh",
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            flexDirection: "column",
+            minHeight: '90vh',
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            flexDirection: 'column'
           }}
         >
           {!streamMusic && !transferPlaylist && (
@@ -48,9 +54,9 @@ function Youtube() {
                 }}
               ></input> */}
               <input
-                value="Transfer Playlist"
-                type="button"
-                className="btn btn-danger btn-lg"
+                value='Transfer Playlist'
+                type='button'
+                className='btn btn-danger btn-lg'
                 onClick={() => {
                   setTransferPlaylist(true);
                 }}
@@ -80,16 +86,16 @@ function Youtube() {
           )} */}
           {transferPlaylist && (
             <UserChannelInfo.Provider value={userChannel}>
-              <Container className="d-flex justify-content-center">
+              <Container className='d-flex justify-content-center'>
                 <input
-                  type="button"
-                  className="m-3 btn btn-danger"
-                  value="Back"
+                  type='button'
+                  className='m-3 btn btn-danger'
+                  value='Back'
                   style={{
-                    maxHeight: "38px",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
+                    maxHeight: '38px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center'
                   }}
                   onClick={() => {
                     setTransferPlaylist(false);
@@ -102,18 +108,18 @@ function Youtube() {
         </Container>
       ) : (
         <Container
-          className="d-flex justify-content-center align-items-center"
+          className='d-flex justify-content-center align-items-center'
           style={{
-            minHeight: "90vh",
+            minHeight: '90vh'
           }}
         >
           <input
             onClick={handleSubmit}
-            className="btn btn-danger btn-lg"
-            id="submit"
-            name="submit"
-            type="submit"
-            value="Login With YouTube"
+            className='btn btn-danger btn-lg'
+            id='submit'
+            name='submit'
+            type='submit'
+            value='Login With YouTube'
           ></input>
         </Container>
       )}
