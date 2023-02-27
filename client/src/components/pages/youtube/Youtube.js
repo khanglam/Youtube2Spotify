@@ -21,7 +21,7 @@ function Youtube() {
     e.preventDefault();
     try {
       const response = await Axios.get(LOGIN_URL);
-      console.log(response.data);
+      console.log(typeof response.data);
       if (response.data.includes('accounts.google')) {
         window.open(response.data, '_blank');
       } else setUserChannel(response.data);
