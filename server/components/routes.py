@@ -388,8 +388,7 @@ def get_youtube_client():
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
     #              credentials in a persistent database instead.
-    session['credentials'] = credentials_to_dict(credentials)
-
+    session['credentials'] = credentials_to_dict(credentials)   
     youtube_client = build(api_service_name, api_version, credentials=credentials)
     return youtube_client
 
@@ -450,6 +449,8 @@ def get_yt_channel_info():
     )
     response = request.execute()
     channel_name = response["items"][0]["snippet"]["title"]
+
+    # session['credentials'] = credentials_to_dict(credentials)
 
     return channel_name
 
@@ -518,8 +519,27 @@ def get_yt_albumSongs():
 @app.route('/logoutYt')
 def clear_credentials():
     if 'credentials' in session:
+        revoke()
         del session['credentials']
     return session
+
+@app.route('/revokeYt')
+def revoke():
+    if 'credentials' not in session:
+        return ('You need to <a href="/authorizeYoutube">authorize</a> before ' +
+            'testing the code to revoke credentials.')
+
+    credentials = Credentials(**session['credentials'])
+
+    revoke = requests.post('https://oauth2.googleapis.com/revoke',
+        params={'token': credentials.token},
+        headers = {'content-type': 'application/x-www-form-urlencoded'})
+
+    status_code = getattr(revoke, 'status_code')
+    if status_code == 200:
+        return('Credentials successfully revoked.')
+    else:
+        return('An error occurred. Error code: ', status_code)
 
 @app.route('/mySession')
 def mySession():
