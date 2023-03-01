@@ -151,6 +151,7 @@ SPOT_TOKEN_INFO = "spotify_token_info"
 
 # Create Spotify OAuth Object
 sp_oauth = SpotifyOAuth(
+    show_dialog=True,
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
     redirect_uri= os.environ.get("SPOTIFY_REDIRECT_URL", "http://localhost:5000/spotifyCallback"),
@@ -199,10 +200,23 @@ def callback_spotify():
 
 @app.route("/clearSpotifyCache", methods=['GET'])
 def clearSpotifyCache():
+    revokeSpotify()
     sp_oauth.cache_handler.save_token_to_cache(None)
     if SPOT_TOKEN_INFO in session:
         del session[SPOT_TOKEN_INFO]
     return "Cleared"
+
+def revokeSpotify():
+    token_info = get_spotify_token()
+    headers = {
+        "Authorization": "Bearer {}".format(token_info["access_token"]),
+        "Content-Type": "application/json"
+    }
+    response = requests.get("https://api.spotify.com/v1/me/playlists?limit=50", headers=headers)
+    if response.status_code == 200:
+        return "Access token successfully revoked."
+    else:
+        return "Failed to revoke access token."
 
 @app.route("/spotifyLyrics", methods=['GET'])
 def get_spotify_lyrics():
