@@ -25,13 +25,16 @@ function Youtube() {
         window.open(response.data, '_blank');
       } else if (response.data == 'Not An Eligible Youtube Account') {
         setErrorWarning(
-          <>
-            It appears that your Google Account is not associated with YouTube.
+          <div style={{ textAlign: 'center', margin: 'auto' }}>
+            It appears that your Google Account does not have a channel created
+            for Youtube.
+            <br />
             Please check and relog with another Google account.
             <br />
-            Note: After authentication, if there is an option to select YouTube
-            account, please select that instead.
-          </>
+            <span style={{ fontWeight: 'bold' }}>Note:</span> After
+            authentication, if there is an option to select YouTube account,
+            please select that instead.
+          </div>
         );
         setUserChannel('dummy data');
       } else {
@@ -39,10 +42,7 @@ function Youtube() {
         setSuccessMessage(response.data);
       }
     } catch (error) {
-      console.log(
-        'Your Account is not associated with YouTube. Please check and relog with another Google account. ' +
-          'After authentication, if there is an option to select YouTube account, please select that instead.'
-      );
+      console.log(error);
     }
   };
   async function logoutYoutube() {
