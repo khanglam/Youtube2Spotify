@@ -516,12 +516,12 @@ def get_yt_albumSongs():
     }
 
 
-@app.route('/logoutYt')
+@app.route('/logoutYt', methods=['GET'])
 def clear_credentials():
     if 'credentials' in session:
         revoke()
         del session['credentials']
-    return session
+    return "Cleared and Revoked Credentials for Youtube"
 
 @app.route('/revokeYt')
 def revoke():
@@ -543,7 +543,7 @@ def revoke():
 
 @app.route('/mySession')
 def mySession():
-    return session
+    return jsonify(session)
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
