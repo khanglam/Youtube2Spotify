@@ -158,7 +158,7 @@ function TransferPlaylist() {
             return {
               // return for map
               title: video.snippet.title,
-              thumbnail: videoThumbnail.url,
+              thumbnail: videoThumbnail ? videoThumbnail.url : null,
               videoId: video.id
             };
           })

@@ -17,6 +17,7 @@ import uuid
 
 # Youtube API Libraries
 import pickle #library to store/load bytes file
+import google.auth.exceptions
 import google_auth_oauthlib.flow
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -200,9 +201,9 @@ def callback_spotify():
 
 @app.route("/clearSpotifyCache", methods=['GET'])
 def clearSpotifyCache():
-    revokeSpotify()
     sp_oauth.cache_handler.save_token_to_cache(None)
     if SPOT_TOKEN_INFO in session:
+        revokeSpotify()
         del session[SPOT_TOKEN_INFO]
     return "Cleared"
 
@@ -452,21 +453,25 @@ def callback_youtube():
 
 @app.route("/getYtChannel", methods=['GET'])
 def get_yt_channel_info():
-    youtube_client = get_youtube_client()
-    # Check if the access token is present in the session.
-    if not youtube_client:
-        return redirect('/authorizeYoutube')
+    try:
+        youtube_client = get_youtube_client()
+        # Check if the access token is present in the session.
+        if not youtube_client:
+            return redirect('/authorizeYoutube')
 
-    request = youtube_client.channels().list(
-        part="snippet,contentDetails,statistics",
-        mine=True
-    )
-    response = request.execute()
-    channel_name = response["items"][0]["snippet"]["title"]
+        request = youtube_client.channels().list(
+            part="snippet,contentDetails,statistics",
+            mine=True
+        )
+        response = request.execute()
+        channel_name = response["items"][0]["snippet"]["title"]
+        return channel_name
+    except google.auth.exceptions.RefreshError:
+        return clear_yt_credentials()
+    except KeyError:
+        return "Not An Eligible Youtube Account"
 
-    # session['credentials'] = credentials_to_dict(credentials)
-
-    return channel_name
+    
 
 @app.route("/getYtPlaylist", methods=['GET', 'POST'])
 def get_yt_playlist():
@@ -531,7 +536,7 @@ def get_yt_albumSongs():
 
 
 @app.route('/logoutYt', methods=['GET'])
-def clear_credentials():
+def clear_yt_credentials():
     if 'credentials' in session:
         revoke()
         del session['credentials']
