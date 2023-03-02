@@ -47,9 +47,9 @@ function Youtube() {
   };
   async function logoutYoutube() {
     try {
-      const response = await Axios.get(CLEAR_YT_SESSION);
+      const res = await Axios.get(CLEAR_YT_SESSION);
       window.location = '/Youtube';
-      console.log(response.data);
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }

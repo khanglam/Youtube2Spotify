@@ -143,8 +143,8 @@ def account():
 # ─██████████████─██████─────────██████████████─────██████─────██████████─██████───────────────██████───────
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-CLIENT_ID = os.environ.get("CLIENT_ID")
-CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+SPOTIFY_CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
 GENIUS_ACCESS_TOKEN = os.environ.get("GENIUS_ACCESS_TOKEN")
 
 # Initial Spotify Login Authentication.
@@ -153,8 +153,8 @@ SPOT_TOKEN_INFO = "spotify_token_info"
 # Create Spotify OAuth Object
 sp_oauth = SpotifyOAuth(
     show_dialog=True,
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
+    client_id=SPOTIFY_CLIENT_ID,
+    client_secret=SPOTIFY_CLIENT_SECRET,
     redirect_uri= os.environ.get("SPOTIFY_REDIRECT_URL", "http://localhost:5000/spotifyCallback"),
     scope="user-library-read user-library-modify streaming app-remote-control user-read-email user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"
 )
@@ -392,6 +392,8 @@ def add_song_to_playlist():
 api_service_name = "youtube"
 api_version = "v3"
 client_secrets_file = "yt_client_secrets.json"
+YT_CLIENT_ID = os.environ.get("YT_CLIENT_ID")
+YT_CLIENT_SECRET = os.environ.get("YT_CLIENT_SECRET")
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 def get_youtube_client():
@@ -410,14 +412,31 @@ def get_youtube_client():
 @app.route('/authorizeYoutube')
 def authorizeYoutube():
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        client_secrets_file, scopes=scopes)
+
+    # This works as well, but using yt_client_secrets.json file
+    # flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    #     client_secrets_file, scopes=scopes)
+    # flow.redirect_uri = url_for('callback_youtube', _external=True)
+
     # The URI created here must exactly match one of the authorized redirect URIs
     # for the OAuth 2.0 client, which you configured in the API Console. If this
     # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
     # error.
+    
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(
+        client_config={
+            "web": {
+                "client_id": YT_CLIENT_ID,
+                "client_secret": YT_CLIENT_SECRET,
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            }
+        },
+        scopes=scopes
+    )
     flow.redirect_uri = url_for('callback_youtube', _external=True)
- 
+
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
         # re-prompting the user for permission. Recommended for web server apps.
@@ -434,9 +453,26 @@ def callback_youtube():
     # Specify the state when creating the flow in the callback so that it can
     # verified in the authorization server response.
     # state - randomly generated 'value' in response to correspond to the request 'key' for better security
+    
+    # This works as well, but using yt_client_secrets.json file
+    # flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    #     client_secrets_file, scopes=scopes, state=state)
+    # flow.redirect_uri = url_for('callback_youtube', _external=True)
+
     state = session.get('state')
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        client_secrets_file, scopes=scopes, state=state)
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(
+        client_config={
+            "web": {
+                "client_id": YT_CLIENT_ID,
+                "client_secret": YT_CLIENT_SECRET,
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            }
+        }, 
+        scopes=scopes,
+        state=state
+    )
     flow.redirect_uri = url_for('callback_youtube', _external=True)
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
