@@ -394,6 +394,7 @@ api_version = "v3"
 client_secrets_file = "yt_client_secrets.json"
 YT_CLIENT_ID = os.environ.get("YT_CLIENT_ID")
 YT_CLIENT_SECRET = os.environ.get("YT_CLIENT_SECRET")
+YT_REDIRECT_URI = os.environ.get("YT_REDIRECT_URI")
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 def get_youtube_client():
@@ -436,7 +437,10 @@ def authorizeYoutube():
         scopes=scopes
     )
     flow.redirect_uri = url_for('callback_youtube', _external=True)
-
+    print("REDIRECT URI IS @@@@@@@@@@@@@@@@@@@@@")
+    print(flow.redirect_uri)
+    flow.redirect_uri = YT_REDIRECT_URI
+    
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
         # re-prompting the user for permission. Recommended for web server apps.
@@ -474,7 +478,9 @@ def callback_youtube():
         state=state
     )
     flow.redirect_uri = url_for('callback_youtube', _external=True)
-
+    print("REDIRECT URI IS @@@@@@@@@@@@@@@@@@@@@")
+    print(flow.redirect_uri)
+    flow.redirect_uri = YT_REDIRECT_URI
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url
 
