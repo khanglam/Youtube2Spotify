@@ -429,6 +429,7 @@ def authorizeYoutube():
             "web": {
                 "client_id": YT_CLIENT_ID,
                 "client_secret": YT_CLIENT_SECRET,
+                "redirect_uri": YT_REDIRECT_URI,
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
                 "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
@@ -436,9 +437,8 @@ def authorizeYoutube():
         },
         scopes=scopes
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True)
+    flow.redirect_uri = url_for('callback_youtube', _external=True,  _scheme='https')
     print(flow.redirect_uri)
-    flow.redirect_uri = YT_REDIRECT_URI
     
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -468,6 +468,7 @@ def callback_youtube():
             "web": {
                 "client_id": YT_CLIENT_ID,
                 "client_secret": YT_CLIENT_SECRET,
+                "redirect_uri": YT_REDIRECT_URI,
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
                 "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
@@ -476,9 +477,7 @@ def callback_youtube():
         scopes=scopes,
         state=state
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True)
-    print(flow.redirect_uri)
-    flow.redirect_uri = YT_REDIRECT_URI
+    flow.redirect_uri = url_for('callback_youtube', _external=True,  _scheme='https')
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url
 
