@@ -437,7 +437,7 @@ def authorizeYoutube():
         },
         scopes=scopes
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True,  _scheme='https')
+    flow.redirect_uri = url_for('callback_youtube', _external=True)
     print(flow.redirect_uri)
     
     authorization_url, state = flow.authorization_url(
@@ -477,7 +477,7 @@ def callback_youtube():
         scopes=scopes,
         state=state
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True,  _scheme='https')
+    flow.redirect_uri = url_for('callback_youtube', _external=True)
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url
 
