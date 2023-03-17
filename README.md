@@ -29,11 +29,12 @@ Youtube2Spotify is a web app that allows users to freely stream any Spotify song
 ## Usage
 
 1. Visit https://youtube2spotify.site/
-1. Navigate to Spotify Navbar and select the 'Login with Spotify' button and authenticate with your Spotify account.
-1. Premium Spotify Users: Select 'Stream Music' if you wish to stream Spotify music.
-1. Navigate to YouTube Navbar and select the 'Login with Youtube' button and authenticate with your Youtube account.
-1. Select the Youtube playlist you want to import.
-1. Click the 'Import' button and wait for the process to finish.
+2. Login / Register a new account.
+3. Navigate to Spotify Navbar and select the 'Login with Spotify' button and authenticate with your Spotify account.
+4. Premium Spotify Users: Select 'Stream Music' if you wish to stream Spotify music.
+5. Navigate to YouTube Navbar and select the 'Login with Youtube' button and authenticate with your Youtube account.
+6. Select the Youtube playlist you want to import.
+7. Click the 'Import' button and wait for the process to finish.
 
 That's it! Enjoy your newly created Spotify playlist!
 
