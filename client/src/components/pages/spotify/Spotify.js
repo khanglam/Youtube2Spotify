@@ -5,8 +5,7 @@ import Axios from '../../Axios';
 import StreamMusic from './StreamMusic';
 import { TokenInfo } from './TokenInfo';
 
-const LOGIN_URL = '/loginSpotify';
-const REFRESH_TOKEN_URL = '/refreshSpotifyToken';
+const GET_TOKEN = '/getSpotifyToken';
 const CLEAR_SPOTIFY_CACHE = '/clearSpotifyCache';
 
 function Spotify() {
@@ -21,18 +20,21 @@ function Spotify() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await Axios.get(LOGIN_URL);
-      setTokenInfo(response.data);
-      setAccessToken(response.data['access_token']);
-      setRefreshToken(response.data['refresh_token']);
-      setExpiresIn(response.data['expires_in']);
+      const response = await Axios.get(GET_TOKEN);
+      if (!response.data.access_token) {
+        window.open(response.data, '_blank');
+      } else {
+        setTokenInfo(response.data);
+        setAccessToken(response.data['access_token']);
+        setRefreshToken(response.data['refresh_token']);
+        setExpiresIn(response.data['expires_in']);
+      }
     } catch (error) {
       console.log(error);
-      // window.location = "/Spotify";
     }
   };
 
-  async function clearSpotifyCache() {
+  async function logoutSpotify() {
     try {
       const response = await Axios.get(CLEAR_SPOTIFY_CACHE);
       console.log('Spotify Cache Cleared');
@@ -48,7 +50,7 @@ function Spotify() {
     const timeout = setTimeout(() => {
       (async () => {
         try {
-          const response = await Axios.get(REFRESH_TOKEN_URL);
+          const response = await Axios.get(GET_TOKEN);
           setTokenInfo(response.data);
           setAccessToken(response.data['access_token']);
           setRefreshToken(response.data['refresh_token']);
@@ -117,11 +119,11 @@ function Spotify() {
                 }}
               ></input>
               <input
-                value='Clear Cache'
+                value='Logout'
                 type='button'
                 className='btn btn-danger btn-lg'
                 onClick={() => {
-                  clearSpotifyCache();
+                  logoutSpotify();
                 }}
               ></input>
             </Container>
