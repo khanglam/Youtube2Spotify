@@ -37,5 +37,5 @@ Youtube2Spotify is a web app that allows users to freely stream any Spotify song
 
 That's it! Enjoy your newly created Spotify playlist!
 
-Disclaimer
+## Disclaimer
 This project is for demonstration purposes only and is not intended for commercial use. The project is provided as-is and the developer is not responsible for any issues or damages that may arise from its use.
