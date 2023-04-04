@@ -14,5 +14,5 @@ class ApplicationConfig:
     # CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 
     # Youtube Configuration
-    SERVER_NAME = 'https://server.youtube2spotify.site'
+    # SERVER_NAME = 'https://server.youtube2spotify.site'
     PREFERRED_URL_SCHEME = 'https'
