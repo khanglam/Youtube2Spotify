@@ -437,7 +437,7 @@ def authorizeYoutube():
         },
         scopes=scopes
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True)
+    flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
     print(flow.redirect_uri)
     
     authorization_url, state = flow.authorization_url(
