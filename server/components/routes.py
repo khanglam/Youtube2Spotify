@@ -427,12 +427,17 @@ def authorizeYoutube():
     flow = google_auth_oauthlib.flow.Flow.from_client_config(
         client_config={
             "web": {
-                "client_id": YT_CLIENT_ID,
-                "client_secret": YT_CLIENT_SECRET,
-                "redirect_uri": YT_REDIRECT_URI,
+                "client_id": "807819243320-thqbv7somffm538lt6gt12dqgfr5fssq.apps.googleusercontent.com",
+                "project_id": "youtube2spotify-358502",
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
                 "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                "client_secret": "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",
+                "redirect_uris": ["https://server.youtube2spotify.site/youtubeCallback"],
+                "javascript_origins": [
+                "https://server.youtube2spotify.site",
+                "https://youtube2spotify.site"
+                ]
             }
         },
         scopes=scopes
