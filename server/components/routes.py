@@ -231,12 +231,10 @@ def get_spotify_lyrics():
         if result['result']['title'] == track:
             song_id = result['result']['id']
             break
-    # result = genius.song(song_id)['song']
-    song = genius.search_song(get_full_info=False, song_id=song_id)
-    lyrics = song.lyrics
+    result = genius.song(song_id)['song']
+    lyrics= genius.lyrics(song_url=result['url'])
     return jsonify({
         "lyrics": lyrics
-        # "lyrics": song
     })
 
 def get_spotify_uri(song_name, artist):
