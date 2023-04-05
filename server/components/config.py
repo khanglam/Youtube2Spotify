@@ -8,11 +8,3 @@ class ApplicationConfig:
     SQLALCHEMY_DATABASE_URI = "sqlite:///db.sqlite"
     # SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     SECRET_KEY = os.environ.get("SECRET_KEY")
-
-    # Spotify configuration
-    # CLIENT_ID = os.environ.get("CLIENT_ID")
-    # CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
-
-    # Youtube Configuration
-    # SERVER_NAME = 'https://server.youtube2spotify.site'
-    PREFERRED_URL_SCHEME = 'https'

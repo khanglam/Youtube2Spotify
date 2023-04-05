@@ -9,7 +9,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 # Spotify Libraries
 from spotipy.oauth2 import SpotifyOAuth
-import lyricsgenius as lg
+from lyricsgenius import Genius
 import requests
 from spotipy.cache_handler import MemoryCacheHandler
 import spotipy
@@ -224,11 +224,19 @@ def get_spotify_lyrics():
     track = request.args.get("track")
     artist = request.args.get("artist")
 
-    genius = lg.Genius(GENIUS_ACCESS_TOKEN)
-    song = genius.search_song(title=track, artist=artist)
+    genius = Genius(GENIUS_ACCESS_TOKEN)
+    results = genius.search_songs(artist+" "+track)["hits"]
+    for result in results:
+        print(result['result']['title'])
+        if result['result']['title'] == track:
+            song_id = result['result']['id']
+            break
+    # result = genius.song(song_id)['song']
+    song = genius.search_song(get_full_info=False, song_id=song_id)
     lyrics = song.lyrics
     return jsonify({
         "lyrics": lyrics
+        # "lyrics": song
     })
 
 def get_spotify_uri(song_name, artist):
@@ -443,7 +451,6 @@ def authorizeYoutube():
         scopes=scopes
     )
     flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
-    # flow.redirect_uri = "https://server.youtube2spotify.site/youtubeCallback"
     
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -484,11 +491,7 @@ def callback_youtube():
     )
     flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
-
     authorization_response = request.url.replace("http://", "https://")
-    print(flow.redirect_uri)
-    print(request.url)
-    print(authorization_response)
 
     flow.fetch_token(authorization_response=authorization_response)
 
