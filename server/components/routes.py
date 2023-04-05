@@ -414,7 +414,6 @@ def get_lyrics(song_id=None, song_url=None, remove_section_headers=False):
     msg = "You must supply either `song_id` or `song_url`."
     assert any([song_id, song_url]), msg
     if song_url:
-        # path = song_url.replace("https://genius.com/", "")
         path = song_url
     else:
         path = song_id['path'][1:]
@@ -425,7 +424,9 @@ def get_lyrics(song_id=None, song_url=None, remove_section_headers=False):
     #     self._make_request(path, web=True).replace('<br/>', '\n'),
     #     "html.parser"
     # )
+    print(path)
     result = requests.get(path)
+    print(result)
     html = BeautifulSoup(result.text.replace('<br/>', '\n'), "html.parser")
 
     # Determine the class of the div
