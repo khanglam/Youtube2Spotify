@@ -444,7 +444,6 @@ def authorizeYoutube():
     )
     flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
     # flow.redirect_uri = "https://server.youtube2spotify.site/youtubeCallback"
-    print(flow.redirect_uri)
     
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -485,10 +484,13 @@ def callback_youtube():
     )
     flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
-    # authorization_response = request.url
-    print(request.url)
 
-    flow.fetch_token(authorization_response=request.url, _scheme='https')
+    authorization_response = request.url.replace("http://", "https://")
+    print(flow.redirect_uri)
+    print(request.url)
+    print(authorization_response)
+
+    flow.fetch_token(authorization_response=authorization_response)
 
 
     # Store credentials in the session.
