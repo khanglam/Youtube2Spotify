@@ -485,9 +485,10 @@ def callback_youtube():
     )
     flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
-    authorization_response = request.url
+    # authorization_response = request.url
 
-    flow.fetch_token(authorization_response=authorization_response)
+    flow.fetch_token(authorization_response=request.url, _scheme='https')
+
 
     # Store credentials in the session.
     # TODO: store credentials in a database instead.
