@@ -32,9 +32,9 @@ __Note__: Upon authentication for your Spotify and YouTube accounts, be assured 
 
 1. Visit https://youtube2spotify.site/
 2. Login / Register a new account.
-3. Navigate to Spotify Navbar and select the 'Login with Spotify' button and authenticate with your Spotify account.
+3. Navigate to Spotify tab and select the 'Login with Spotify' button and proceed to authenticate with your Spotify account.
 4. Premium Spotify Users: Select 'Stream Music' if you wish to stream Spotify music.
-5. Navigate to YouTube Navbar and select the 'Login with Youtube' button and authenticate with your Youtube account.
+5. Navigate to YouTube tab and select the 'Login with Youtube' button and proceed to authenticate with your YouTube account.
 6. Select the Youtube playlist you want to import.
 7. Click the 'Import' button and wait for the process to finish.
 
