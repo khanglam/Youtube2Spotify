@@ -1,6 +1,6 @@
 # Youtube2Spotify
 
-Youtube2Spotify is a web app that allows users to freely stream any Spotify songs (with lyrics display), and convert their favorite Youtube playlists to a Spotify playlist. It uses the Youtube and Spotify API to retrieve the user's playlists and songs and allows them to transfer the songs to their Spotify account. This project is for demo purposes only and is not open for contribution.
+Youtube2Spotify is a web app that allows users to freely stream any Spotify songs, and convert their favorite Youtube playlists to a Spotify playlist. It uses the Youtube and Spotify API to retrieve the user's playlists and songs and allows them to transfer the songs to their Spotify account. This project is for demo purposes only and is not open for contribution.
 
 ## Technologies Used
 
