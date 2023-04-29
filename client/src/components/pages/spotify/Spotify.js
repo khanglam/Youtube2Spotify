@@ -119,7 +119,7 @@ function Spotify() {
                 }}
               ></input>
               <input
-                value='Logout'
+                value='Revoke Spotify Access'
                 type='button'
                 className='btn btn-danger btn-lg'
                 onClick={() => {

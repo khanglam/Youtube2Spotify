@@ -94,7 +94,7 @@ function Youtube() {
                 ></input>
               )}
               <input
-                value='Logout'
+                value='Revoke YouTube Access'
                 type='button'
                 className='btn btn-danger btn-lg'
                 onClick={() => {

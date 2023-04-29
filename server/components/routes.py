@@ -9,7 +9,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 # Spotify Libraries
 from spotipy.oauth2 import SpotifyOAuth
-from lyricsgenius import Genius
+import lyricsgenius as lg
 from bs4 import BeautifulSoup
 import re
 import requests
@@ -245,18 +245,9 @@ def get_spotify_lyrics():
     track = request.args.get("track")
     artist = request.args.get("artist")
 
-    # genius = Genius(GENIUS_ACCESS_TOKEN)
-    # results = genius.search_songs(artist+" "+track)["hits"]
-    # for result in results:
-    #     if result['result']['title'] == track:
-    #         song_id = result['result']['id']
-    #         break
-    # result = genius.song(song_id)['song']
-    # lyrics = get_lyrics(song_url=result['url'], song_id=result)
-    response = requests.get(f"https://api.lyrics.ovh/v1/{artist}/{track}")
-    response_body = urlopen(response).read()
-    print(response)
-
+    genius = lg.Genius(GENIUS_ACCESS_TOKEN)
+    song = genius.search_song(title=track, artist=artist)
+    lyrics = song.lyrics
     return jsonify({
         "lyrics": lyrics
     })
