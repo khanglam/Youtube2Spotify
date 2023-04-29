@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Nav, Navbar, Container } from "react-bootstrap";
-import "./NavigationBar.css";
-import { UserContext } from "./UserContext";
-import { NavLink } from "react-router-dom";
+import React, { useState, useContext, useEffect } from 'react';
+import { Nav, Navbar, Container } from 'react-bootstrap';
+import './NavigationBar.css';
+import { UserContext } from './UserContext';
+import { NavLink } from 'react-router-dom';
 
 function NavigationBar() {
   const { isLoggedIn } = useContext(UserContext); // Unused
@@ -16,23 +16,12 @@ function NavigationBar() {
           </NavLink>
           <Navbar.Toggle aria-controls='id_to_toggle' />
           <Navbar.Collapse id='id_to_toggle'>
-            <Nav className='navbar-nav mr-auto'>
-              <Nav.Item>
-                <NavLink to='/home' className='nav-link'>
-                  Home
-                </NavLink>
-              </Nav.Item>
-              <Nav.Item>
-                <NavLink to='/about' className='nav-link'>
-                  About
-                </NavLink>
-              </Nav.Item>
-            </Nav>
+            <Nav className='navbar-nav mr-auto'></Nav>
             <Nav className='navbar-nav'>
               {isLoggedIn ? (
                 <>
                   <Nav.Item>
-                    <NavLink to='/About' className='nav-link'>
+                    <NavLink to='/Account' className='nav-link'>
                       Account
                     </NavLink>
                   </Nav.Item>

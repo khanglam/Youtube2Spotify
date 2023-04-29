@@ -6,10 +6,7 @@ const CLEAR_YT_SESSION = '/logoutYt';
 
 const logOut = async () => {
   try {
-    let res = await Axios.get(CLEAR_SPOTIFY_CACHE); // Revoke and clear Spotify Session
-    res = await Axios.get(CLEAR_YT_SESSION); // Revoke and clear YT Session
-    res = await Axios.post(LOGOUT_URL);
-    console.log(res);
+    const res = await Axios.post(LOGOUT_URL);
     window.location.href = '/';
   } catch (error) {
     console.log(error.message);

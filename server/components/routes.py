@@ -10,10 +10,13 @@ from flask_login import login_user, logout_user, current_user, login_required
 # Spotify Libraries
 from spotipy.oauth2 import SpotifyOAuth
 import lyricsgenius as lg
+from bs4 import BeautifulSoup
+import re
 import requests
 from spotipy.cache_handler import MemoryCacheHandler
 import spotipy
 import uuid
+from urllib.request import Request, urlopen
 
 # Youtube API Libraries
 import pickle #library to store/load bytes file
@@ -25,6 +28,7 @@ from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.exceptions import RefreshError
 import youtube_dl
+
 
 @app.route("/@me")
 def get_current_user():
@@ -39,10 +43,27 @@ def get_current_user():
         "username" : user.username
     })
 
-@app.route("/about")
-def about():
-    return render_template('about.html', title='About')
+@app.route("/change_password", methods=['POST'])
+@login_required
+def change_password():
+    current_password = request.json["current_password"]
+    new_password = request.json["new_password"]
+    confirm_new_password = request.json["confirm_password"]
 
+    if current_user.is_authenticated:
+        if not bcrypt.check_password_hash(current_user.password, current_password):
+            return jsonify({"errorMessage": "Current password is incorrect"}), 401
+
+        if new_password != confirm_new_password:
+            return jsonify({"errorMessage": "New password and confirmation do not match"}), 402
+    else:
+        return jsonify({"errorMessage": "You are NOT logged in"}), 403
+    
+    hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    current_user.password = hashed_password
+    db.session.commit()
+
+    return "Success! Password successfully changed"
 
 @app.route("/registertest", methods=['GET', 'POST'])
 def oldRegister():
@@ -375,6 +396,7 @@ def add_song_to_playlist():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 # ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ─████████──████████─██████████████─██████──██████─██████████████─██████──██████─██████████████───██████████████─
 # ─██░░░░██──██░░░░██─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██───██░░░░░░░░░░██─
@@ -430,15 +452,19 @@ def authorizeYoutube():
                 "client_id": YT_CLIENT_ID,
                 "client_secret": YT_CLIENT_SECRET,
                 "redirect_uri": YT_REDIRECT_URI,
+                "project_id": "youtube2spotify-358502",
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
                 "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                "javascript_origins": [
+                "https://server.youtube2spotify.site",
+                "https://youtube2spotify.site"
+                ]
             }
         },
         scopes=scopes
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True)
-    print(flow.redirect_uri)
+    flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
     
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -477,11 +503,12 @@ def callback_youtube():
         scopes=scopes,
         state=state
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True)
+    flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
-    authorization_response = request.url
+    authorization_response = request.url.replace("http://", "https://")
 
     flow.fetch_token(authorization_response=authorization_response)
+
 
     # Store credentials in the session.
     # TODO: store credentials in a database instead.
