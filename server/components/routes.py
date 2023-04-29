@@ -16,6 +16,7 @@ import requests
 from spotipy.cache_handler import MemoryCacheHandler
 import spotipy
 import uuid
+from urllib.request import Request, urlopen
 
 # Youtube API Libraries
 import pickle #library to store/load bytes file
@@ -42,10 +43,27 @@ def get_current_user():
         "username" : user.username
     })
 
-@app.route("/about")
-def about():
-    return render_template('about.html', title='About')
+@app.route("/change_password", methods=['POST'])
+@login_required
+def change_password():
+    current_password = request.json["current_password"]
+    new_password = request.json["new_password"]
+    confirm_new_password = request.json["confirm_password"]
 
+    if current_user.is_authenticated:
+        if not bcrypt.check_password_hash(current_user.password, current_password):
+            return jsonify({"errorMessage": "Current password is incorrect"}), 401
+
+        if new_password != confirm_new_password:
+            return jsonify({"errorMessage": "New password and confirmation do not match"}), 402
+    else:
+        return jsonify({"errorMessage": "You are NOT logged in"}), 403
+    
+    hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    current_user.password = hashed_password
+    db.session.commit()
+
+    return "Success! Password successfully changed"
 
 @app.route("/registertest", methods=['GET', 'POST'])
 def oldRegister():
@@ -227,14 +245,18 @@ def get_spotify_lyrics():
     track = request.args.get("track")
     artist = request.args.get("artist")
 
-    genius = Genius(GENIUS_ACCESS_TOKEN)
-    results = genius.search_songs(artist+" "+track)["hits"]
-    for result in results:
-        if result['result']['title'] == track:
-            song_id = result['result']['id']
-            break
-    result = genius.song(song_id)['song']
-    lyrics = get_lyrics(song_url=result['url'], song_id=result)
+    # genius = Genius(GENIUS_ACCESS_TOKEN)
+    # results = genius.search_songs(artist+" "+track)["hits"]
+    # for result in results:
+    #     if result['result']['title'] == track:
+    #         song_id = result['result']['id']
+    #         break
+    # result = genius.song(song_id)['song']
+    # lyrics = get_lyrics(song_url=result['url'], song_id=result)
+    response = requests.get(f"https://api.lyrics.ovh/v1/{artist}/{track}")
+    response_body = urlopen(response).read()
+    print(response)
+
     return jsonify({
         "lyrics": lyrics
     })
@@ -383,67 +405,6 @@ def add_song_to_playlist():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-def get_lyrics(song_id=None, song_url=None, remove_section_headers=False):
-    """Uses BeautifulSoup to scrape song info off of a Genius song URL
-
-    You must supply either `song_id` or song_url`.
-
-    Args:
-        song_id (:obj:`int`, optional): Song ID.
-        song_url (:obj:`str`, optional): Song URL.
-        remove_section_headers (:obj:`bool`, optional):
-            If `True`, removes [Chorus], [Bridge], etc. headers from lyrics.
-
-    Returns:
-        :obj:`str` \\|‌ :obj:`None`:
-            :obj:`str` If it can find the lyrics, otherwise `None`
-
-    Note:
-        If you pass a song ID, the method will have to make an extra request
-        to obtain the song's URL and scrape the lyrics off of it. So it's best
-        to pass the method the song's URL if it's available.
-
-        If you want to get a song's lyrics by searching for it,
-        use :meth:`Genius.search_song` instead.
-
-    Note:
-        This method removes the song headers based on the value of the
-        :attr:`Genius.remove_section_headers` attribute.
-
-    """
-    msg = "You must supply either `song_id` or `song_url`."
-    assert any([song_id, song_url]), msg
-    if song_url:
-        path = song_url
-    else:
-        path = song_id['path'][1:]
-
-    # Scrape the song lyrics from the HTML
-
-    # html = BeautifulSoup(
-    #     self._make_request(path, web=True).replace('<br/>', '\n'),
-    #     "html.parser"
-    # )
-    print(path)
-    result = requests.get(path)
-    print(result)
-    html = BeautifulSoup(result.text.replace('<br/>', '\n'), "html.parser")
-
-    # Determine the class of the div
-    div = html.find("div", class_=re.compile("^lyrics$|Lyrics__Root"))
-    if div is None:
-        print("Couldn't find the lyrics section. "
-            "Please report this if the song has lyrics.\n"
-            "Song URL: https://genius.com/{}".format(path))
-        return None
-
-    lyrics = div.get_text()
-
-    # Remove [Verse], [Bridge], etc.
-    if remove_section_headers:
-        lyrics = re.sub(r'(\[.*?\])*', '', lyrics)
-        lyrics = re.sub('\n{2}', '\n', lyrics)  # Gaps between verses
-    return lyrics.strip("\n")
 
 # ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ─████████──████████─██████████████─██████──██████─██████████████─██████──██████─██████████████───██████████████─
