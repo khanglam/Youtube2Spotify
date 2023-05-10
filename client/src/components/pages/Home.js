@@ -5,12 +5,14 @@ function Home() {
     <>
       <h1>Youtube2Spotify</h1>
       <p>
-        Are you tired of wasting time copying your favorite songs from YouTube
-        to Spotify? Look no further than Youtube2Spotify! Our web app makes it
-        easy to transfer entire YouTube playlists directly to Spotify with just
-        a few clicks. With features like lyrics display and OAuth 2.0
-        authentication, Youtube2Spotify is the ultimate solution for hassle-free
-        music platforms transferring. Any feedback is appreciated!
+        Are you tired of living like a caveman, spending hours manually
+        transferring songs from YouTube to Spotify? It's time to upgrade to the
+        Bronze Age with Youtube2Spotify! With just a few clicks, you can
+        effortlessly transfer entire playlists and bask in the glory of Bronze
+        technology. And don't fret about security, I've got you covered with
+        OAuth 2.0 authentication. It may not be powered by AI, but please give
+        it a try and let me know what you think. I welcome all feedback, even if
+        it's from the Stone Age.
       </p>
       <h2>Technologies Used</h2>
       <ul>
