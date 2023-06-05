@@ -23,7 +23,7 @@ function Youtube() {
       const response = await Axios.get(LOGIN_URL);
       if (response.data.includes('accounts.google')) {
         window.open(response.data, '_blank');
-      } else if (response.data == 'Not An Eligible Youtube Account') {
+      } else if (response.data === 'Not An Eligible Youtube Account') {
         setErrorWarning(
           <div style={{ textAlign: 'center', margin: 'auto' }}>
             It appears that your Google Account does not have a channel created
@@ -49,7 +49,6 @@ function Youtube() {
     try {
       const res = await Axios.get(CLEAR_YT_SESSION);
       window.location = '/Youtube';
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
