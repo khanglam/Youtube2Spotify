@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/run.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/api/static/$1"
+    },
+    {
+      "src": "/templates/(.*)",
+      "dest": "/api/templates/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/run.py"
+    }
+  ],
+  "functions": {
+    "preBuild": {
+      "command": "pip install -r requirements.txt"
+    }
+  }
+}
