@@ -9,9 +9,9 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 # Spotify Libraries
 from spotipy.oauth2 import SpotifyOAuth
-import lyricsgenius as lg
-from bs4 import BeautifulSoup
-import re
+# import lyricsgenius as lg
+# from bs4 import BeautifulSoup
+# import re
 import requests
 from spotipy.cache_handler import MemoryCacheHandler
 import spotipy
@@ -28,7 +28,6 @@ from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.exceptions import RefreshError
 import youtube_dl
-
 
 @app.route("/@me")
 def get_current_user():
@@ -65,6 +64,7 @@ def change_password():
 
     return "Success! Password successfully changed"
 
+# Unused Method
 @app.route("/registertest", methods=['GET', 'POST'])
 def oldRegister():
     if current_user.is_authenticated:
@@ -105,7 +105,7 @@ def register():
     return "Success! Account Successfully Created: " + user.username
     
 
-
+# Unused Method
 @app.route("/logintest", methods=['GET', 'POST'])
 def oldLogin():
     if current_user.is_authenticated:
@@ -244,13 +244,14 @@ def revokeSpotify():
 def get_spotify_lyrics():
     track = request.args.get("track")
     artist = request.args.get("artist")
+    response = requests.get(f"https://lyrist.vercel.app/api/{track}/{artist}")   
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return jsonify({
+            "lyrics": "Error"
+        })
 
-    genius = lg.Genius(GENIUS_ACCESS_TOKEN)
-    song = genius.search_song(title=track, artist=artist)
-    lyrics = song.lyrics
-    return jsonify({
-        "lyrics": lyrics
-    })
 
 def get_spotify_uri(song_name, artist):
     token_info = get_spotify_token()
