@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM python:3.9-slim
+FROM python:3.10
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -11,7 +11,8 @@ COPY . /app
 RUN pip install -r requirements.txt
 
 # Expose the port that your Flask app will run on
-EXPOSE 5000
+ENV PORT=5000
+EXPOSE $PORT
 
 # Run the Flask app
 CMD ["python", "./run.py"]
