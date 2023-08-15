@@ -9,9 +9,9 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 # Spotify Libraries
 from spotipy.oauth2 import SpotifyOAuth
-import lyricsgenius as lg
-from bs4 import BeautifulSoup
-import re
+# import lyricsgenius as lg
+# from bs4 import BeautifulSoup
+# import re
 import requests
 from spotipy.cache_handler import MemoryCacheHandler
 import spotipy
@@ -28,7 +28,6 @@ from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.exceptions import RefreshError
 import youtube_dl
-
 
 @app.route("/@me")
 def get_current_user():
@@ -65,6 +64,7 @@ def change_password():
 
     return "Success! Password successfully changed"
 
+# Unused Method
 @app.route("/registertest", methods=['GET', 'POST'])
 def oldRegister():
     if current_user.is_authenticated:
@@ -105,7 +105,7 @@ def register():
     return "Success! Account Successfully Created: " + user.username
     
 
-
+# Unused Method
 @app.route("/logintest", methods=['GET', 'POST'])
 def oldLogin():
     if current_user.is_authenticated:
@@ -244,13 +244,14 @@ def revokeSpotify():
 def get_spotify_lyrics():
     track = request.args.get("track")
     artist = request.args.get("artist")
+    response = requests.get(f"https://lyrist.vercel.app/api/{track}/{artist}")   
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return jsonify({
+            "lyrics": "Error"
+        })
 
-    genius = lg.Genius(GENIUS_ACCESS_TOKEN)
-    song = genius.search_song(title=track, artist=artist)
-    lyrics = song.lyrics
-    return jsonify({
-        "lyrics": lyrics
-    })
 
 def get_spotify_uri(song_name, artist):
     token_info = get_spotify_token()
@@ -416,7 +417,6 @@ api_version = "v3"
 client_secrets_file = "yt_client_secrets.json"
 YT_CLIENT_ID = os.environ.get("YT_CLIENT_ID")
 YT_CLIENT_SECRET = os.environ.get("YT_CLIENT_SECRET")
-YT_REDIRECT_URI = os.environ.get("YT_REDIRECT_URI")
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 def get_youtube_client():
@@ -441,6 +441,8 @@ def authorizeYoutube():
     #     client_secrets_file, scopes=scopes)
     # flow.redirect_uri = url_for('callback_youtube', _external=True)
 
+    # url_for works here because it basically appends the route of the 'method' to whatever URL we're currently on.
+
     # The URI created here must exactly match one of the authorized redirect URIs
     # for the OAuth 2.0 client, which you configured in the API Console. If this
     # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
@@ -451,7 +453,7 @@ def authorizeYoutube():
             "web": {
                 "client_id": YT_CLIENT_ID,
                 "client_secret": YT_CLIENT_SECRET,
-                "redirect_uri": YT_REDIRECT_URI,
+                "redirect_uri": os.environ.get("YT_REDIRECT_URI", "http://localhost:5000/youtubeCallback"),
                 "project_id": "youtube2spotify-358502",
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
@@ -464,7 +466,10 @@ def authorizeYoutube():
         },
         scopes=scopes
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
+
+    # Not using this method because we'd have to remove _scheme='https' to run in dev mode every time, which gets annoying.
+    # flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https') <- also works but only for prod
+    flow.redirect_uri = os.environ.get("YT_REDIRECT_URI", "http://localhost:5000/youtubeCallback")
     
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -494,7 +499,7 @@ def callback_youtube():
             "web": {
                 "client_id": YT_CLIENT_ID,
                 "client_secret": YT_CLIENT_SECRET,
-                "redirect_uri": YT_REDIRECT_URI,
+                "redirect_uri": os.environ.get("YT_REDIRECT_URI", "http://localhost:5000/youtubeCallback"),
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
                 "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
@@ -503,7 +508,10 @@ def callback_youtube():
         scopes=scopes,
         state=state
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
+    # Not using this method because we'd have to remove _scheme='https' to run in dev mode every time.
+    # flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https') <- also works but only for prod
+    flow.redirect_uri = os.environ.get("YT_REDIRECT_URI", "http://localhost:5000/youtubeCallback")
+
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url.replace("http://", "https://")
 
@@ -533,7 +541,8 @@ def get_yt_channel_info():
         channel_name = response["items"][0]["snippet"]["title"]
         return channel_name
     except google.auth.exceptions.RefreshError:
-        return clear_yt_credentials()
+        clear_yt_credentials()
+        return redirect('/authorizeYoutube')
     except KeyError:
         return "Not An Eligible Youtube Account"
 

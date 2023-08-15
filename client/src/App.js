@@ -1,24 +1,24 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import Home from './components/pages/Home';
-import Account from './components/pages/Account';
-import Login from './components/pages/Login';
-import { logOut } from './components/pages/Logout';
-import NoMatch from './components/pages/NoMatch';
-import { Register } from './components/pages/Register';
-import Spotify from './components/pages/spotify/Spotify';
-import Youtube from './components/pages/youtube/Youtube';
+import Home from "./components/pages/Home";
+import Account from "./components/pages/Account";
+import Login from "./components/pages/Login";
+import { LogOut } from "./components/pages/Logout";
+import NoMatch from "./components/pages/NoMatch";
+import { Register } from "./components/pages/Register";
+import Spotify from "./components/pages/spotify/Spotify";
+import Youtube from "./components/pages/youtube/Youtube";
 
-import WelcomePage from './components/WelcomePage';
-import Layout from './components/Layout';
-import Axios from './components/Axios';
+import WelcomePage from "./components/WelcomePage";
+import Layout from "./components/Layout";
+import Axios from "./components/Axios";
 
-import { UserContext } from './components/UserContext';
+import { UserContext } from "./components/UserContext";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const isLoggedInMemo = useMemo(
     () => ({ isLoggedIn, setIsLoggedIn, username, setUsername }),
     [isLoggedIn, setIsLoggedIn, username, setUsername]
@@ -27,12 +27,12 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await Axios.get('/@me');
+        const response = await Axios.get("/@me");
         setIsLoggedIn(true);
         setUsername(response.data.username);
       } catch (error) {
         if (error.response?.status === 401) {
-          console.log('Not Authenticated');
+          console.log("Not Authenticated");
           setIsLoggedIn(false);
         }
       }
@@ -48,35 +48,35 @@ function App() {
         <Router>
           <Switch>
             <Route
-              path={['/home', '/account', 'spotify', '/youtube', '/logout']}
+              path={[
+                "/",
+                "/home",
+                "/account",
+                "spotify",
+                "/youtube",
+                "/logout",
+                "/login",
+                "/register",
+              ]}
             >
-              <Layout>
-                <Switch>
-                  <Route path='/home' component={Home} />
-                  <Route path='/account' component={Account} />
-                  <Route path='/spotify' component={Spotify} />
-                  <Route path='/youtube' component={Youtube} />
-                  <Route path='/logout' component={logOut} />
-                </Switch>
-              </Layout>
-            </Route>
-            <Route path={['/login', '/register', '/']}>
               {isLoggedIn ? (
                 <Layout>
                   <Switch>
-                    <Route exact path='/' component={Home} />
-                    <Route path='/account' component={Account} />
-                    <Route path='/spotify' component={Spotify} />
-                    <Route path='/logout' component={logOut} />
+                    <Route exact path="/" component={Home} />
+                    <Route path="/home" component={Home} />
+                    <Route path="/account" component={Account} />
+                    <Route path="/spotify" component={Spotify} />
+                    <Route path="/youtube" component={Youtube} />
+                    <Route path="/logout" component={LogOut} />
                     <Route component={NoMatch} />
                   </Switch>
                 </Layout>
               ) : (
                 <WelcomePage>
                   <Switch>
-                    <Route exact path='/' component={Login} />
-                    <Route path='/login' component={Login} />
-                    <Route path='/register' component={Register} />
+                    <Route exact path="/" component={Login} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/register" component={Register} />
                     <Route component={Login} />
                   </Switch>
                 </WelcomePage>
