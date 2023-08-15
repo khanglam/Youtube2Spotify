@@ -4,6 +4,7 @@ import Axios from '../../Axios';
 import PlayListResult from './PlayListResult';
 import VideoResults from './VideoResults';
 import TransferModal from './TransferModal';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
 // Spotify API
 import SpotifyWebApi from 'spotify-web-api-node';
@@ -13,6 +14,8 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 function TransferPlaylist() {
+  const [isLoading, setIsLoading] = useState(false); // loading state for load animation
+
   const [allPlayLists, setAllPlaylists] = useState([]); // All Playlists in a given yt channel
   const [selectedPlayList, setSelectedPlayList] = useState(null); // Playlist that user clicked on
   const [choosenPlaylistItems, setChoosenPlaylistItems] = useState([]); // Songs in a given playlist ID
@@ -138,15 +141,13 @@ function TransferPlaylist() {
     spotifyApi.setAccessToken(accessToken); // Set accessToken to spotifyApi for song search
   }, [accessToken]); // Only get accessToken when clicked on TransferPlaylist Button
 
-  // useEffect(() => {
-  //   console.log(existingPlaylists);
-  // }, [existingPlaylists]); // Only get accessToken when clicked on TransferPlaylist Button
-
   // Fetch Videos Within Playlist
   useEffect(() => {
     (async () => {
       try {
         if (!selectedPlayList) return;
+        // Set loading to true before fetching data
+        setIsLoading(true);
         const response = await Axios.get('/getYtAlbumSongs', {
           params: {
             playlistId: selectedPlayList.playlistId
@@ -175,8 +176,10 @@ function TransferPlaylist() {
             };
           })
         );
+        setIsLoading(false); // Set loading to false after data is fetched successfully
       } catch (error) {
         console.log(error);
+        setIsLoading(false); // Set loading to false in case of an error
       }
     })();
   }, [selectedPlayList]); // Fetch everytime user clicks on new playlist
@@ -185,6 +188,8 @@ function TransferPlaylist() {
   useEffect(() => {
     (async () => {
       try {
+        // Set loading to true before fetching data
+        setIsLoading(true);
         setSelectedPlayList(null);
         // Get Spotify Access Token
         let response = await Axios.get('/getSpotifyToken');
@@ -202,8 +207,10 @@ function TransferPlaylist() {
             };
           })
         );
+        setIsLoading(false); // Set loading to false after data is fetched successfully
       } catch (error) {
         console.log(error);
+        setIsLoading(false); // Set loading to false in case of an error
       }
     })();
   }, []); // Only need to load this once
@@ -211,13 +218,29 @@ function TransferPlaylist() {
   return (
     <Container className='d-flex flex-column' style={{ height: '90vh' }}>
       <div className='flex-grow-1 my-2' style={{ overflowY: 'auto' }}>
-        {allPlayLists.map((album) => (
-          <PlayListResult
-            album={album}
-            key={album.id}
-            chooseAlbum={chooseAlbum} // chooseAlbum also clears out allPlayLists so we can render selectedPlaylist
+        {isLoading ? (
+          <ScaleLoader
+            style={{
+              position: 'absolute',
+              top: '50%', // Center vertically
+              left: '50%' // Center horizontally
+            }}
+            color={'#36d7b7'}
+            loading={true}
+            height={50}
+            width={5}
+            aria-label='Loading Spinner'
+            data-testid='loader'
           />
-        ))}
+        ) : (
+          allPlayLists.map((album) => (
+            <PlayListResult
+              album={album}
+              key={album.id}
+              chooseAlbum={chooseAlbum} // chooseAlbum also clears out allPlayLists so we can render selectedPlaylist
+            />
+          ))
+        )}
         {selectedPlayList && (
           <div
             className='text-center'
@@ -227,12 +250,24 @@ function TransferPlaylist() {
               fontSize: '25px'
             }}
           >
-            {choosenPlaylistItems.map(
-              (
-                video // Load Videos From Playlist
-              ) => (
+            {isLoading ? (
+              <ScaleLoader
+                style={{
+                  position: 'absolute',
+                  top: '50%', // Center vertically
+                  left: '50%' // Center horizontally
+                }}
+                color={'#36d7b7'}
+                loading={true}
+                height={50}
+                width={5}
+                aria-label='Loading Spinner'
+                data-testid='loader'
+              />
+            ) : (
+              choosenPlaylistItems.map((video) => (
                 <VideoResults video={video} key={video.id} />
-              )
+              ))
             )}
             {existingPlaylists.length !== 0 && (
               <TransferModal
