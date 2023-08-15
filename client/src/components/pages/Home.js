@@ -5,14 +5,11 @@ function Home() {
     <>
       <h1>Youtube2Spotify</h1>
       <p>
-        Are you tired of living like a caveman, spending hours manually
-        transferring songs from YouTube to Spotify? It's time to upgrade to the
-        Bronze Age with Youtube2Spotify! With just a few clicks, you can
-        effortlessly transfer entire playlists and bask in the glory of Bronze
-        technology. And don't fret about security, I've got you covered with
-        OAuth 2.0 authentication. It may not be powered by AI, but please give
-        it a try and let me know what you think. I welcome all feedback, even if
-        it's from the Stone Age.
+        Are you tired of manually transferring songs from YouTube to Spotify?
+        With Youtube2Spotify, you can easily move entire playlists with just a
+        few clicks. You'll enjoy the convenience of OAuth 2.0 authentication for
+        added security. I appreciate any feedback you have to offer, so give it
+        a try and let me know your thoughts!
       </p>
       <h2>Technologies Used</h2>
       <ul>
