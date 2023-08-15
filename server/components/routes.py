@@ -465,7 +465,7 @@ def authorizeYoutube():
         },
         scopes=scopes
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
+    flow.redirect_uri = url_for('callback_youtube', _external=True)
     
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -504,7 +504,7 @@ def callback_youtube():
         scopes=scopes,
         state=state
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https')
+    flow.redirect_uri = url_for('callback_youtube', _external=True)
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url.replace("http://", "https://")
 
@@ -534,7 +534,8 @@ def get_yt_channel_info():
         channel_name = response["items"][0]["snippet"]["title"]
         return channel_name
     except google.auth.exceptions.RefreshError:
-        return clear_yt_credentials()
+        clear_yt_credentials()
+        return redirect('/authorizeYoutube')
     except KeyError:
         return "Not An Eligible Youtube Account"
 
