@@ -417,7 +417,6 @@ api_version = "v3"
 client_secrets_file = "yt_client_secrets.json"
 YT_CLIENT_ID = os.environ.get("YT_CLIENT_ID")
 YT_CLIENT_SECRET = os.environ.get("YT_CLIENT_SECRET")
-YT_REDIRECT_URI = os.environ.get("YT_REDIRECT_URI")
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 def get_youtube_client():
@@ -442,6 +441,8 @@ def authorizeYoutube():
     #     client_secrets_file, scopes=scopes)
     # flow.redirect_uri = url_for('callback_youtube', _external=True)
 
+    # url_for works here because it basically appends the route of the 'method' to whatever URL we're currently on.
+
     # The URI created here must exactly match one of the authorized redirect URIs
     # for the OAuth 2.0 client, which you configured in the API Console. If this
     # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
@@ -452,7 +453,7 @@ def authorizeYoutube():
             "web": {
                 "client_id": YT_CLIENT_ID,
                 "client_secret": YT_CLIENT_SECRET,
-                "redirect_uri": YT_REDIRECT_URI,
+                "redirect_uri": os.environ.get("YT_REDIRECT_URI", "http://localhost:5000/youtubeCallback"),
                 "project_id": "youtube2spotify-358502",
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
@@ -465,7 +466,10 @@ def authorizeYoutube():
         },
         scopes=scopes
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True)
+
+    # Not using this method because we'd have to remove _scheme='https' to run in dev mode every time, which gets annoying.
+    # flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https') <- also works but only for prod
+    flow.redirect_uri = os.environ.get("YT_REDIRECT_URI", "http://localhost:5000/youtubeCallback")
     
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -495,7 +499,7 @@ def callback_youtube():
             "web": {
                 "client_id": YT_CLIENT_ID,
                 "client_secret": YT_CLIENT_SECRET,
-                "redirect_uri": YT_REDIRECT_URI,
+                "redirect_uri": os.environ.get("YT_REDIRECT_URI", "http://localhost:5000/youtubeCallback"),
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
                 "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
@@ -504,7 +508,10 @@ def callback_youtube():
         scopes=scopes,
         state=state
     )
-    flow.redirect_uri = url_for('callback_youtube', _external=True)
+    # Not using this method because we'd have to remove _scheme='https' to run in dev mode every time.
+    # flow.redirect_uri = url_for('callback_youtube', _external=True, _scheme='https') <- also works but only for prod
+    flow.redirect_uri = os.environ.get("YT_REDIRECT_URI", "http://localhost:5000/youtubeCallback")
+
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = request.url.replace("http://", "https://")
 
