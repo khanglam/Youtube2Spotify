@@ -6,11 +6,11 @@ __Note__: Upon authentication for your Spotify and YouTube accounts, be assured 
 
 ## Technologies Used
 
-- Python 3
+- React Frontend
+- Python 3 / Flask Backend
 - Google's Youtube API
 - Spotify's Web API
-- Lyrics Genius API
-- Flask web framework
+- Lyrics Genius API (lyrist)
 - OAuth 2.0 Authorization Code Flow Protocol
 - Netlify and Railway App cloud platform
 
