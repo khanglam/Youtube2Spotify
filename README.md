@@ -32,11 +32,15 @@ __Note__: Upon authentication for your Spotify and YouTube accounts, be assured 
 
 1. Visit https://youtube2spotify.site/
 2. Login / Register a new account.
-3. Navigate to Spotify tab and select the 'Login with Spotify' button and proceed to authenticate with your Spotify account.
-4. Premium Spotify Users: Select 'Stream Music' if you wish to stream Spotify music.
-5. Navigate to YouTube tab and select the 'Login with Youtube' button and proceed to authenticate with your YouTube account.
-6. Select the Youtube playlist you want to import.
-7. Click the 'Import' button and wait for the process to finish.
+ ![image](https://github.com/khanglam/Youtube2Spotify/assets/7472121/a108a330-17d7-4c74-b612-837016d73586)
+4. Navigate to Spotify tab and select the 'Login with Spotify' button and proceed to authenticate with your Spotify account.
+5. Premium Spotify Users: Select 'Stream Music' if you wish to stream Spotify music.
+<img src="https://github.com/khanglam/Youtube2Spotify/assets/7472121/a77ff7ce-1dfd-4e70-a247-65a4e1e68a6d" width="450"> <img src="https://github.com/khanglam/Youtube2Spotify/assets/7472121/dd008613-f7ec-4a0c-b500-5903b58eeaed" width="450">
+7. Navigate to YouTube tab and select the 'Login with Youtube' button and proceed to authenticate with your YouTube account.
+8. Select the Youtube playlist you want to import.
+   ![image](https://github.com/khanglam/Youtube2Spotify/assets/7472121/25e5bc31-4f86-4c11-b08c-28dfd9c2e9a0)
+10. A popup modal will appear that contains all your existing Spotify playlists. Choose destination and click the 'Transfer Playlist' button and wait for the process to finish. Wait for 'Success!' message.
+![image](https://github.com/khanglam/Youtube2Spotify/assets/7472121/08e100e3-2c33-43f4-9d65-00cd2afb4014)
 
 That's it! Enjoy your newly created Spotify playlist!
 
