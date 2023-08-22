@@ -64,23 +64,6 @@ def change_password():
 
     return "Success! Password successfully changed"
 
-# Unused Method
-@app.route("/registertest", methods=['GET', 'POST'])
-def oldRegister():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(
-            form.password.body).decode('utf-8')
-        user = User(username=form.username.body, email=form.email.body,
-                    password=hashed_password)  # Creating entry for DB
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You can now log in', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
-
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     username = request.json["username"]
