@@ -88,22 +88,6 @@ def register():
     return "Success! Account Successfully Created: " + user.username
     
 
-# Unused Method
-@app.route("/logintest", methods=['GET', 'POST'])
-def oldLogin():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.body).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.body):
-            login_user(user, remember=form.remember.body)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
-        else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html', title='Login', form=form)
-
 @app.route("/login", methods=['POST'])
 def login():
     username = request.json["username"]
