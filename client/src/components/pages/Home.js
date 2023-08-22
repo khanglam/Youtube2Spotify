@@ -13,7 +13,8 @@ function Home() {
       </p>
       <h2>Technologies Used</h2>
       <ul>
-        <li>Python 3</li>
+        <li>React Frontend</li>
+        <li>Python 3 / Flask Backend</li>
         <li>Google's Youtube API</li>
         <li>Spotify's Web API</li>
         <li>Lyrics Genius API</li>

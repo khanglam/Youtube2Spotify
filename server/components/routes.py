@@ -64,23 +64,6 @@ def change_password():
 
     return "Success! Password successfully changed"
 
-# Unused Method
-@app.route("/registertest", methods=['GET', 'POST'])
-def oldRegister():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(
-            form.password.body).decode('utf-8')
-        user = User(username=form.username.body, email=form.email.body,
-                    password=hashed_password)  # Creating entry for DB
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You can now log in', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
-
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     username = request.json["username"]
@@ -104,22 +87,6 @@ def register():
 
     return "Success! Account Successfully Created: " + user.username
     
-
-# Unused Method
-@app.route("/logintest", methods=['GET', 'POST'])
-def oldLogin():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.body).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.body):
-            login_user(user, remember=form.remember.body)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
-        else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html', title='Login', form=form)
 
 @app.route("/login", methods=['POST'])
 def login():
